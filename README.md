@@ -12,7 +12,7 @@ To get started, simply fork this repository and modify the template to your liki
 Once modified you will need to: 
 - Build the docker image using `make image`
 - Create a Kuberentes Deployment using the new image
-- Expose this deployment behind a Kuberentes Service
+- Expose this deployment behind a Kubernetes Service
 - Update your APIPortal and set the `spec.ui.service` field to the Kubernetes service
 
 If you have any questions or feedback, please feel free to reach out to us via our website or GitHub issues. 
