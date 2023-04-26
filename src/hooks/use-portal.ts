@@ -12,22 +12,23 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+import axios from 'axios'
 import { useQuery } from 'react-query'
 
-export const useAPIs = () => {
-  const fetchUrl = `/api/apis`
+export interface Portal {
+  title?: string
+  description?: string
+  apis: any[]
+  collections: any[]
+}
 
-  return useQuery(fetchUrl, () =>
-    fetch(fetchUrl, {
-      redirect: 'manual',
-    })
-      .then((res) => {
-        if (res.type === 'opaqueredirect') {
-          location.reload()
-        } else {
-          return res.json()
-        }
-      })
+export const usePortal = () => {
+  const fetchUrl = '/api/'
+
+  return useQuery<Portal>(fetchUrl, () =>
+    axios
+      .get(fetchUrl)
+      .then(({ data }) => data)
       .catch((error) => console.log(error)),
   )
 }

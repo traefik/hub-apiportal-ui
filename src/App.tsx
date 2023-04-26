@@ -13,6 +13,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 import React, { useEffect, useMemo } from 'react'
+import axios from 'axios'
 import { FaencyProvider, globalCss, lightTheme } from '@traefiklabs/faency'
 import PageLayout from 'components/PageLayout'
 import { BrowserRouter, Navigate, Route, Routes as RouterRoutes } from 'react-router-dom'
@@ -22,11 +23,26 @@ import { QueryClientProvider, QueryClient } from 'react-query'
 
 import ToastPool from 'components/ToastPool'
 import { ToastProvider } from 'context/toasts'
-import { useAPIs } from 'hooks/use-apis'
+import { usePortal } from 'hooks/use-portal'
 import EmptyState from 'pages/EmptyState'
 import Settings from 'pages/Settings'
 
 const queryClient = new QueryClient()
+
+/* axios global setup to handle 401 error status
+ ** reload page when user's session end to initiate the auth flow
+ */
+axios.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    if (error.response.status === 401) {
+      location.reload()
+    }
+    return error
+  },
+)
 
 const light = lightTheme('blue')
 
@@ -38,19 +54,19 @@ const bodyGlobalStyle = globalCss({
 })
 
 const Routes = () => {
-  const { data: apis } = useAPIs()
+  const { data: portal } = usePortal()
 
   const defaultRoute = useMemo(() => {
-    if (apis?.collections) {
-      for (let i = 0; i < apis.collections.length; i++) {
-        if (apis.collections[i].apis?.length) {
-          return apis.collections[i].apis[0].specLink
+    if (portal?.collections) {
+      for (let i = 0; i < portal.collections.length; i++) {
+        if (portal.collections[i].apis?.length) {
+          return portal.collections[i].apis[0].specLink
         }
       }
     }
 
-    return apis?.apis?.[0]?.specLink
-  }, [apis])
+    return portal?.apis?.[0]?.specLink
+  }, [portal])
 
   return (
     <RouterRoutes>
@@ -61,7 +77,7 @@ const Routes = () => {
           defaultRoute ? (
             <Navigate to={defaultRoute} replace />
           ) : (
-            <PageLayout>
+            <PageLayout portal={portal}>
               <EmptyState />
             </PageLayout>
           )
@@ -70,7 +86,7 @@ const Routes = () => {
       <Route
         path="/apis/:apiName"
         element={
-          <PageLayout>
+          <PageLayout portal={portal}>
             <API />
           </PageLayout>
         }
@@ -78,7 +94,7 @@ const Routes = () => {
       <Route
         path="/collections/:collectionName/apis/:apiName"
         element={
-          <PageLayout>
+          <PageLayout portal={portal}>
             <API />
           </PageLayout>
         }
@@ -86,7 +102,7 @@ const Routes = () => {
       <Route
         path="/settings"
         element={
-          <PageLayout hasCard={false}>
+          <PageLayout hasCard={false} portal={portal}>
             <Settings />
           </PageLayout>
         }

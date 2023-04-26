@@ -21,25 +21,13 @@ import tokens from './tokens.json'
 const waitAsync = (seconds: number) => new Promise((res) => setTimeout(res, seconds * 1000))
 
 export const handlers = [
-  rest.post('/login', (req, res, ctx) => {
+  rest.get('/api/', (req, res, ctx) => {
     return res(
-      // TODO confirm how the response going to be, this is fully assumed
       ctx.status(200),
       ctx.json({
-        accessToken: 'mockt0ken18683jbdb',
-        user: {
-          username: 'user@email.com',
-        },
-      }),
-    )
-  }),
-
-  rest.get('/api/apis', (req, res, ctx) => {
-    return res(
-      // ctx.status(302),
-      // ctx.set('Location', 'https://sso.portal.hub-preview.traefik.io'),
-      ctx.status(200),
-      ctx.json({
+        title: 'my portal',
+        description: 'a description of my portal',
+        logoUrl: 'https://example.com/logo.png',
         collections: [
           {
             name: 'my-empty-store-collection',
@@ -61,7 +49,7 @@ export const handlers = [
             apis: [
               {
                 name: 'my-petstore-api-2',
-                specLink: '/collections/my-store-collection/apis/my-petstore-api@petstore',
+                specLink: '/collections/my-store-collection-2/apis/my-petstore-api-2@petstore',
                 pathPrefix: '/path',
               },
             ],
@@ -69,12 +57,17 @@ export const handlers = [
         ],
         apis: [{ name: 'my-petstore-api', specLink: '/apis/my-petstore-api@petstore', pathPrefix: '/api' }],
       }),
+
+      // Unauthorized user mock
+      // ctx.status(401),
+      // ctx.json({
+      //   errorMessage: 'Unauthorized',
+      // }),
     )
   }),
 
   rest.get('/api/apis/:apiName', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(api))
-    // return res(ctx.status(302), ctx.set('Location', 'https://sso.portal.hub-preview.traefik.io'))
   }),
 
   rest.get('/api/collections/:collectionName/apis/:apiName', (req, res, ctx) => {

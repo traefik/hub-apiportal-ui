@@ -24,11 +24,12 @@ import {
 } from '@traefiklabs/faency'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { FaCog, FaFolder, FaFolderOpen, FaFileAlt } from 'react-icons/fa'
+import { Portal } from '../hooks/use-portal'
+
 // import { FiPower } from 'react-icons/fi'
 
 // import { useAuthDispatch, useAuthState } from 'context/auth'
 // import { handleLogOut } from 'context/auth/actions'
-import { useAPIs } from 'hooks/use-apis'
 
 const NavigationTreeItem = ({
   name,
@@ -79,8 +80,11 @@ const NavigationTreeItem = ({
   )
 }
 
-const SideNavbar = () => {
-  const { data: apis } = useAPIs()
+type Props = {
+  portal?: Portal
+}
+
+const SideNavbar = ({ portal }: Props) => {
   // const authDispatch = useAuthDispatch()
   // const { user } = useAuthState()
 
@@ -98,12 +102,12 @@ const SideNavbar = () => {
         }}
       >
         <>
-          {apis?.collections?.length || apis?.apis?.length ? (
+          {portal?.collections?.length || portal?.apis?.length ? (
             <H3 css={{ color: '$gray9', fontSize: '$3', margin: '$4 0 0 $2' }}>Available APIs</H3>
           ) : null}
           <Flex direction="column" css={{ mt: '$2' }}>
             <NavigationTreeContainer defaultCollapseIcon={<FaFolderOpen />} defaultExpandIcon={<FaFolder />}>
-              {apis?.collections?.map((collection, index: number) => (
+              {portal?.collections?.map((collection, index: number) => (
                 <NavigationTreeItem
                   key={`sidenav-${index}`}
                   name={collection.name}
@@ -125,7 +129,7 @@ const SideNavbar = () => {
                 </NavigationTreeItem>
               ))}
             </NavigationTreeContainer>
-            {apis?.apis?.map((api, index: number) => (
+            {portal?.apis?.map((api, index: number) => (
               <NavigationTreeItem
                 key={`sidenav-api-${index}`}
                 name={api.name}

@@ -15,6 +15,8 @@ Once modified you will need to:
 - Expose this deployment behind a Kubernetes Service
 - Update your APIPortal and set the `spec.ui.service` field to the Kubernetes service
 
+A sample Deployment and Service can be found in [manifest.yaml](./manifest.yaml).
+
 If you have any questions or feedback, please feel free to reach out to us via our website or GitHub issues. 
 We hope you find this template useful and look forward to seeing what you build with it!
 

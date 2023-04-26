@@ -17,11 +17,10 @@ import { Box, Card, Container, Flex, H1, Text, VariantProps, CSS } from '@traefi
 import { Helmet } from 'react-helmet-async'
 
 import SideNavbar from 'components/SideNavbar'
-import { getInjectedValues } from 'utils/getInjectedValues'
-
-const { portalDescription, portalTitle } = getInjectedValues()
+import { Portal } from '../hooks/use-portal'
 
 type Props = {
+  portal?: Portal
   title?: string
   children?: React.ReactNode
   hasCard?: boolean
@@ -34,6 +33,7 @@ type Props = {
 const PageLayout = ({
   children,
   title,
+  portal,
   hasCard = true,
   noGutter = false,
   containerSize = '3',
@@ -58,11 +58,11 @@ const PageLayout = ({
           zIndex: 1,
         }}
       >
-        <H1 css={{ fontSize: '$6', color: 'inherit' }}>{portalTitle as string}</H1>
-        <Text css={{ color: 'inherit', opacity: 0.7 }}>{portalDescription as string}</Text>
+        <H1 css={{ fontSize: '$6', color: 'inherit' }}>{portal?.title as string}</H1>
+        <Text css={{ color: 'inherit', opacity: 0.7 }}>{portal?.description as string}</Text>
       </Flex>
       <Flex>
-        <SideNavbar />
+        <SideNavbar portal={portal} />
         <Flex
           direction="column"
           css={{

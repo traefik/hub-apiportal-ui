@@ -22,4 +22,4 @@ RUN npm install --global serve@14.2.0
 COPY --from=builder /app/build ./
 USER node
 EXPOSE 3000
-CMD ["serve"]
+CMD ["serve", "--single"]
