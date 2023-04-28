@@ -31,7 +31,7 @@ Once modified, you will need to:
 - Build the Docker image using `make image`
 - Create a Kubernetes Deployment using the new image
 - Expose this deployment behind a Kubernetes Service
-- Update your APIPortal and set the `spec.ui.service` field to the Kubernetes service
+- Update your APIPortal CRD and set the `spec.ui.service` field to the Kubernetes service
 
 A sample Deployment and Service can be found in [manifest.yaml](./manifest.yaml "Link to example manifest file").
 
@@ -60,7 +60,7 @@ Note that the Service Worker is only active in development mode.
 
 ## Testing
 
-Run units tests:
+Run unit tests:
 
 ```shell
 yarn test
