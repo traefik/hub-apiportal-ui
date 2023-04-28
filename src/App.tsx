@@ -39,8 +39,9 @@ axios.interceptors.response.use(
   (error) => {
     if (error.response.status === 401) {
       location.reload()
+      return error
     }
-    return error
+    return Promise.reject(error)
   },
 )
 

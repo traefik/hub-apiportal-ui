@@ -115,7 +115,14 @@ const Toast = ({
           </Flex>
           <Text
             as="p"
-            css={{ color: 'white', fontWeight: 500, alignSelf: 'center', whiteSpace: 'break-spaces', lineHeight: 1.3 }}
+            css={{
+              color: 'white',
+              fontWeight: 500,
+              alignSelf: 'center',
+              whiteSpace: 'break-spaces',
+              lineHeight: 1.3,
+              marginRight: '$3',
+            }}
           >
             {message}
           </Text>

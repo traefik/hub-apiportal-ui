@@ -12,24 +12,29 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import React from 'react'
+import React, { useState } from 'react'
 import {
-  NavigationDrawer,
-  NavigationContainer,
-  H3,
   Flex,
+  H3,
+  NavigationContainer,
+  NavigationDrawer,
   NavigationItem,
+  NavigationLink,
   NavigationTreeContainer,
   NavigationTreeItem as FaencyNavTreeItem,
 } from '@traefiklabs/faency'
+import axios from 'axios'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { FaCog, FaFolder, FaFolderOpen, FaFileAlt } from 'react-icons/fa'
+import { FiPower } from 'react-icons/fi'
+
 import { Portal } from '../hooks/use-portal'
 
-// import { FiPower } from 'react-icons/fi'
-
 // import { useAuthDispatch, useAuthState } from 'context/auth'
+import { useToasts } from 'context/toasts'
 // import { handleLogOut } from 'context/auth/actions'
+
+const CustomNavigationLink = NavigationLink as any
 
 const NavigationTreeItem = ({
   name,
@@ -94,6 +99,27 @@ const SideNavbar = ({ portal }: Props) => {
 
   const { collectionName } = useParams()
 
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const { addToast } = useToasts()
+
+  const onLogOutClick = async () => {
+    setIsLoggingOut(true)
+    try {
+      await axios.get('/logout')
+      location.reload()
+    } catch (err) {
+      addToast({
+        severity: 'error',
+        message: 'Something went wrong while logging out, please try again later',
+        timeout: 60000,
+      })
+      console.error(err)
+    } finally {
+      setIsLoggingOut(false)
+    }
+  }
+
   return (
     <NavigationDrawer css={{ backgroundColor: 'white', borderRight: '1px solid $gray4', width: 240 }} elevation={1}>
       <NavigationContainer
@@ -149,10 +175,15 @@ const SideNavbar = ({ portal }: Props) => {
         >
           Settings
         </NavigationItem>
-        {/* <Text css={{ pl: '$3', fontWeight: '500' }}>user?.username</Text>
-        <CustomNavigationLink as="button" startAdornment={<FiPower />} onClick={() => console.log('click')}>
+        {/* <Text css={{ pl: '$3', fontWeight: '500' }}>user?.username</Text> */}
+        <CustomNavigationLink
+          as="button"
+          onClick={onLogOutClick}
+          startAdornment={<FiPower />}
+          css={{ cursor: isLoggingOut ? 'wait' : 'pointer' }}
+        >
           Log Out
-        </CustomNavigationLink> */}
+        </CustomNavigationLink>
       </NavigationContainer>
     </NavigationDrawer>
   )
