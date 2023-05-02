@@ -16,6 +16,7 @@ import axios from 'axios'
 import { useQuery } from 'react-query'
 
 export interface Portal {
+  logoUrl?: string
   title?: string
   description?: string
   apis: any[]

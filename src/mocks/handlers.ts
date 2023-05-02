@@ -74,6 +74,14 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(collectionApi))
   }),
 
+  rest.get('/logout', async (_, res, ctx) => {
+    await waitAsync(1)
+    const rnd = Math.floor(Math.random() * 100) + 1
+    return rnd % 2 === 0
+      ? res(ctx.status(204))
+      : res(ctx.status(500), ctx.json({ errorMessage: 'Internal Server Error' }))
+  }),
+
   rest.get('/api/tokens', async (_, res, ctx) => {
     await waitAsync(1)
     return res(ctx.status(200), ctx.json(tokens))
