@@ -7,7 +7,7 @@
 
 <div align="center">
     <a href="https://hub.traefik.io">Log In</a> |
-    <a href="https://doc.traefik.io/traefik-hub/">Documentation</a> |
+    <a href="https://doc.traefik.io/traefik-hub/">Documentation</a>
 </div>
 </div>
 <br />
@@ -16,16 +16,16 @@
 <br />
 </div>
 
-
 Welcome to Traefik Hub's API Portal Template repository!
-This repository contains a starter template for customizing the UI of your API Portal.
 
-This template provides a starting point for building your own custom API Portal UI.
+The repository is a starting point for building your own custom API Portal UI.
+
 It includes a set of HTML, CSS, and JavaScript files that you can customize to match your branding and requirements.
 
 ## Getting started
 
 To get started, fork this repository and modify the template to your liking.
+
 Once modified, you will need to:
 
 - Build the Docker image using `make image`
@@ -34,9 +34,6 @@ Once modified, you will need to:
 - Update your APIPortal CRD and set the `spec.ui.service` field to the Kubernetes service
 
 A sample Deployment and Service can be found in [manifest.yaml](./manifest.yaml "Link to example manifest file").
-
-If you have any questions or feedback, please feel free to reach out to us via our website or GitHub issues.
-We hope you find this template useful and look forward to seeing what you build with it!
 
 ## Development
 
@@ -55,8 +52,10 @@ yarn start
 App is running at [http://localhost:3000](http://localhost:3000 "Link to localhost on port 3000") in dev mode.
 
 The local setup uses a Service Worker to intercept HTTP calls and inject a mocked reply.
+
 This allows developers to test the application with mocked data and simulate different scenarios without relying on external APIs or services.
-Note that the Service Worker is only active in development mode.
+
+> Note that the Service Worker is only active in development mode.
 
 ## Testing
 
@@ -65,3 +64,9 @@ Run unit tests:
 ```shell
 yarn test
 ```
+
+## Feedback
+
+If you have any questions or feedback, please feel free to reach out to us via our website or GitHub issues.
+
+We hope you find this template useful and look forward to seeing what you build with it!
