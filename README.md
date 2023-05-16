@@ -33,7 +33,14 @@ Once modified, you will need to:
 - Expose this deployment behind a Kubernetes Service
 - Update your APIPortal CRD and set the `spec.ui.service` field to the Kubernetes service
 
-A sample Deployment and Service can be found in [manifest.yaml](./manifest.yaml "Link to example manifest file").
+A sample Deployment and Service can be found in the [manifest.yaml](./manifest.yaml "Link to example manifest file") file.
+
+## Requirements
+
+- [Docker](https://www.docker.com/ "Link to website of Docker")
+- [Node.js](https://nodejs.org/en "Link to website of Node.js") (at least Node 18)
+- [Yarn Classic](https://classic.yarnpkg.com/lang/en/ "Link to website of Yarn")
+- [Git](https://git-scm.com/ "Link to the website of Git")
 
 ## Development
 
@@ -49,11 +56,11 @@ yarn install
 yarn start
 ```
 
-App is running at [http://localhost:3000](http://localhost:3000 "Link to localhost on port 3000") in dev mode.
+The application is running at [http://localhost:3000](http://localhost:3000 "Link to localhost on port 3000") in dev mode.
 
 The local setup uses a Service Worker to intercept HTTP calls and inject a mocked reply.
 
-This allows developers to test the application with mocked data and simulate different scenarios without relying on external APIs or services.
+This allows to test the application with mocked data and simulate different scenarios without relying on external APIs or services.
 
 > Note that the Service Worker is only active in development mode.
 
@@ -67,6 +74,6 @@ yarn test
 
 ## Feedback
 
-If you have any questions or feedback, please feel free to reach out to us via our website or GitHub issues.
+If you have any questions or feedback, please feel free to reach out to us via our [support](https://doc.traefik.io/traefik-hub/support/ "Link to support information") or GitHub issues.
 
 We hope you find this template useful and look forward to seeing what you build with it!
