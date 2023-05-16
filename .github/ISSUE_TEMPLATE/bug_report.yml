@@ -1,0 +1,55 @@
+name: 🐞 Bug Report
+description: Something is not working as intended.
+body:
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Welcome!
+      description: |
+        The issue tracker is for reporting bugs and feature requests only.
+
+        All new/updated issues are triaged regularly by the maintainers.
+        All issues closed by a bot are subsequently double-checked by the maintainers.
+
+        Please do not file issues for general support questions.
+        For more information, please check our [support docs](https://doc.traefik.io/traefik-hub/support/).
+
+      options:
+        - label: Yes, I've searched similar issues on [GitHub](https://github.com/traefik/hub-apiportal-ui/issues) and didn't find any.
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Current Behavior
+      description: |
+        How to write a good bug report?
+
+        - Respect the issue template as much as possible.
+        - The title should be short and descriptive.
+        - Explain the conditions which led you to report this issue: the context.
+        - The context should lead to something, an idea or a problem that you’re facing.
+        - Remain clear and concise.
+        - Format your messages to help the reader focus on what matters and understand the structure of your message, use [Markdown syntax](https://help.github.com/articles/github-flavored-markdown)
+      placeholder: What did you do?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what you expected to happen.
+      placeholder: When I do <X>, <Z> should happen instead.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. In this environment...
+        2. With this config...
+        3. Run '...'
+        4. See error...
+    validations:
+      required: false
