@@ -12,23 +12,18 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Box, Card, Flex, Text } from '@traefiklabs/faency'
 import React from 'react'
-import { FaExclamationCircle } from 'react-icons/fa'
+import { Flex, H1, Link } from '@traefiklabs/faency'
 
-export const SomethingWentWrong = ({ variant }: { variant?: 'inner' | 'ghost' }) => {
+const NotFoundPage = () => {
   return (
-    <Card variant={variant} css={{ p: '$8' }}>
-      <Flex direction="column" align="center" justify="center">
-        <Box css={{ mb: '$2', color: '$textRed' }}>
-          <FaExclamationCircle size={24} />
-        </Box>
-        <Text size={4} variant="red" css={{ fontWeight: 600 }}>
-          An error occurred while processing your request. Please try again.
-        </Text>
-      </Flex>
-    </Card>
+    <Flex direction="column" gap={3} align="center" justify="center" css={{ height: 500 }}>
+      <H1>This page doesn&apos;t exist</H1>
+      <Link href="/" css={{ cursor: 'pointer', mt: '$2' }}>
+        Go back to main page
+      </Link>
+    </Flex>
   )
 }
 
-export default SomethingWentWrong
+export default NotFoundPage

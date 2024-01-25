@@ -12,20 +12,23 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { lazy, useEffect, useMemo } from 'react'
 import axios from 'axios'
 import { FaencyProvider, globalCss, lightTheme } from '@traefiklabs/faency'
 import PageLayout from 'components/PageLayout'
 import { BrowserRouter, Navigate, Route, Routes as RouterRoutes } from 'react-router-dom'
-import API from 'pages/API'
-import { HelmetProvider } from 'react-helmet-async'
-import { QueryClientProvider, QueryClient } from 'react-query'
+import { Helmet, HelmetProvider } from 'react-helmet-async'
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 
 import ToastPool from 'components/ToastPool'
 import { ToastProvider } from 'context/toasts'
 import { usePortal } from 'hooks/use-portal'
 import EmptyState from 'pages/EmptyState'
-import Settings from 'pages/Settings'
+import useIsUsingJWTAuth from 'hooks/use-is-using-jwt-auth'
+import NotFoundPage from 'pages/404'
+
+const API = lazy(() => import('pages/API'))
+const Settings = lazy(() => import('pages/Settings'))
 
 const queryClient = new QueryClient()
 
@@ -45,6 +48,13 @@ axios.interceptors.response.use(
   },
 )
 
+const API_PATHS = [
+  '/apis/:apiName',
+  '/apis/:apiName/versions/:apiVersion',
+  '/collections/:collectionName/apis/:apiName',
+  '/collections/:collectionName/apis/:apiName/versions/:apiVersion',
+]
+
 const light = lightTheme('blue')
 
 const bodyGlobalStyle = globalCss({
@@ -56,6 +66,7 @@ const bodyGlobalStyle = globalCss({
 
 const Routes = () => {
   const { data: portal } = usePortal()
+  const isUsingJWT = useIsUsingJWTAuth()
 
   const defaultRoute = useMemo(() => {
     if (portal?.collections) {
@@ -70,45 +81,55 @@ const Routes = () => {
   }, [portal])
 
   return (
-    <RouterRoutes>
-      {bodyGlobalStyle()}
-      <Route
-        path="/"
-        element={
-          defaultRoute ? (
-            <Navigate to={defaultRoute} replace />
-          ) : (
+    <>
+      <Helmet>
+        <script src="https://unpkg.com/@stoplight/elements/web-components.min.js"></script>
+      </Helmet>
+      <RouterRoutes>
+        {bodyGlobalStyle()}
+        <Route
+          path="/"
+          element={
+            defaultRoute ? (
+              <Navigate to={defaultRoute} replace />
+            ) : (
+              <PageLayout portal={portal}>
+                <EmptyState />
+              </PageLayout>
+            )
+          }
+        />
+        {API_PATHS.map((path, key) => (
+          <Route
+            key={key}
+            path={path}
+            element={
+              <PageLayout portal={portal} noGutter fixedHeight>
+                <API />
+              </PageLayout>
+            }
+          />
+        ))}
+        {!isUsingJWT && (
+          <Route
+            path="/settings"
+            element={
+              <PageLayout portal={portal}>
+                <Settings />
+              </PageLayout>
+            }
+          />
+        )}
+        <Route
+          path="*"
+          element={
             <PageLayout portal={portal}>
-              <EmptyState />
+              <NotFoundPage />
             </PageLayout>
-          )
-        }
-      />
-      <Route
-        path="/apis/:apiName"
-        element={
-          <PageLayout portal={portal}>
-            <API />
-          </PageLayout>
-        }
-      />
-      <Route
-        path="/collections/:collectionName/apis/:apiName"
-        element={
-          <PageLayout portal={portal}>
-            <API />
-          </PageLayout>
-        }
-      />
-      <Route
-        path="/settings"
-        element={
-          <PageLayout hasCard={false} portal={portal}>
-            <Settings />
-          </PageLayout>
-        }
-      />
-    </RouterRoutes>
+          }
+        />
+      </RouterRoutes>
+    </>
   )
 }
 

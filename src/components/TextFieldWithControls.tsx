@@ -90,7 +90,12 @@ const TextFieldWithControls = ({
           label={label}
           state={hasError ? 'invalid' : undefined}
           disabled={disabled || isSubmitting}
-          css={{ width: '100%' }}
+          css={{
+            width: '100%',
+            '> div:first-child': { borderRadius: 0 },
+            ':before': { borderRadius: 0 },
+            ':after': { borderRadius: 0 },
+          }}
           id={idOrName}
           {...field}
           onChange={handleChange}

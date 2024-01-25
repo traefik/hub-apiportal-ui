@@ -22,7 +22,7 @@ type GetPositionType = {
   right?: number
 }
 
-export function getPositionValues(positionX: PositionXProps, positionY: PositionYProps): GetPositionType {
+export function getPositionValues(positionX: PositionXProps = 'center', positionY: PositionYProps = 'bottom'): GetPositionType {
   const position: GetPositionType = {}
 
   switch (positionX) {

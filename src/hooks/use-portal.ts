@@ -13,23 +13,51 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
 
 export interface Portal {
   logoUrl?: string
   title?: string
   description?: string
-  apis: any[]
-  collections: any[]
+  jwtAuth: boolean
+  apis: API.Resp[]
+  collections: Collection.Resp[]
 }
 
 export const usePortal = () => {
   const fetchUrl = '/api/'
 
-  return useQuery<Portal>(fetchUrl, () =>
-    axios
-      .get(fetchUrl)
-      .then(({ data }) => data)
-      .catch((error) => console.log(error)),
-  )
+  return useQuery<Portal>({
+    queryKey: [fetchUrl],
+
+    queryFn: () =>
+      axios
+        .get(fetchUrl)
+        .then(({ data }) => data)
+        .catch((error) => {
+          console.error(error)
+          return error
+        }),
+  })
+}
+
+export const useAPI = (apiName?: string, collectionName?: string) => {
+  const { data: portal } = usePortal()
+
+  return useMemo(() => {
+    if (!apiName) {
+      return undefined
+    }
+
+    if (!collectionName) {
+      return portal?.apis.find((x) => x.name === apiName)
+    }
+
+    const collection = portal?.collections.find((x) => x.name === collectionName)
+    if (!collection) {
+      return undefined
+    }
+    return collection.apis.find((x) => x.name === apiName)
+  }, [apiName, collectionName, portal])
 }

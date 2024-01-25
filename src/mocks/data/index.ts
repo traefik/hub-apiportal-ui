@@ -12,15 +12,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import React from 'react'
-import { Flex, H1 } from '@traefiklabs/faency'
-
-const EmptyState = () => {
-  return (
-    <Flex direction="column" gap={3} align="center" justify="center" css={{ height: 500 }}>
-      <H1>No API is shared yet</H1>
-    </Flex>
-  )
-}
-
-export default EmptyState
+export { default as api1 } from './api.json'
+export { default as api2 } from './api-2.json'
+export { default as collection1 } from './collection-api.json'
+export { default as collection2 } from './collection-api-2.json'
+export { default as tokens } from './tokens.json'

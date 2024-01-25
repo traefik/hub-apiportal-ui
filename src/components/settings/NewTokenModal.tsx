@@ -15,7 +15,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 import { Dialog, DialogContent, DialogOverlay, DialogPortal } from '@traefiklabs/faency'
 import React from 'react'
 
-import NewTokenForm from './NewTokenForm'
+import NewTokenForm from 'components/settings/NewTokenForm'
 
 type NewTokenModalProps = {
   isOpen: boolean
@@ -28,7 +28,7 @@ export const NewTokenModal = ({ isOpen, onComplete, onOpenChange }: NewTokenModa
     <Dialog onOpenChange={onOpenChange} open={isOpen}>
       <DialogPortal>
         <DialogOverlay />
-        <DialogContent css={{ width: 480, bc: '$02dp' }}>
+        <DialogContent css={{ width: 480, bc: '$02dp', borderRadius: 0 }}>
           <NewTokenForm onCancel={() => onOpenChange(false)} onComplete={onComplete} />
         </DialogContent>
       </DialogPortal>

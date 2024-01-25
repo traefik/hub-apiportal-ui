@@ -13,13 +13,17 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 import React from 'react'
+import { Box, H2, Text } from '@traefiklabs/faency'
 
 export const CustomFailedError = (): JSX.Element => {
   return (
-    <div className="error-container">
-      <h2 className="title">Service Unavailable</h2>
-      <p>This API cannot be displayed because the service is not online. Please try again later.</p>
-    </div>
+    <Box css={{ py: '$8', px: '$4' }}>
+      <H2 css={{ mb: '$6' }}>Specification unavailable</H2>
+
+      <Text css={{ fontSize: '$5' }}>
+        The API cannot be displayed because the OpenAPI specification is either not reachable or not configured.
+      </Text>
+    </Box>
   )
 }
 

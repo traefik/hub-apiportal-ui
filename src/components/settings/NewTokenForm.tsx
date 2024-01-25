@@ -18,12 +18,13 @@ import { Form, Formik, FormikHelpers } from 'formik'
 import React, { useCallback, useState } from 'react'
 import { FaInfoCircle } from 'react-icons/fa'
 
-import CopyButton from './CopyButton'
-import { tokenFormSchema } from './schema'
+import CopyButton from 'components/settings/CopyButton'
+import { tokenFormSchema } from 'components/settings/schema'
 
 import InputField from 'components/TextFieldWithControls'
 import LabelText from 'components/LabelText'
 import { useToasts } from 'context/toasts'
+import COLORS from 'components/styles/colors'
 
 const CodeField = styled(TextField, {
   backgroundColor: '$gray3',
@@ -65,7 +66,7 @@ const NewTokenCopy = ({ onComplete, token }: NewTokenCopyProps) => {
           <CopyButton disabled={false} text={token} />
         </Box>
         <Box css={{ width: '100%', textAlign: 'right' }}>
-          <Button onClick={onComplete} type="button">
+          <Button onClick={onComplete} type="button" css={{ borderRadius: 0, backgroundColor: COLORS.primary }}>
             Ok, got it
           </Button>
         </Box>
@@ -100,10 +101,15 @@ const NewTokenCreation = ({ onCancel, onSubmit }: NewTokenCreationProps) => {
             </Box>
 
             <Flex gap={2} css={{ alignSelf: 'flex-end', mt: '$4' }}>
-              <Button ghost onClick={onCancel} type="button">
+              <Button ghost onClick={onCancel} type="button" css={{ borderRadius: 0 }}>
                 Cancel
               </Button>
-              <Button disabled={!dirty} state={isSubmitting ? 'waiting' : undefined} type="submit">
+              <Button
+                disabled={!dirty}
+                state={isSubmitting ? 'waiting' : undefined}
+                css={{ borderRadius: 0 }}
+                type="submit"
+              >
                 Create
               </Button>
             </Flex>

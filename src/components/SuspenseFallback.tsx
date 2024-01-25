@@ -12,23 +12,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Box, Card, Flex, Text } from '@traefiklabs/faency'
+import { Flex } from '@traefiklabs/faency'
 import React from 'react'
-import { FaExclamationCircle } from 'react-icons/fa'
+import { Oval } from 'react-loader-spinner'
 
-export const SomethingWentWrong = ({ variant }: { variant?: 'inner' | 'ghost' }) => {
+const SuspenseFallback = () => {
   return (
-    <Card variant={variant} css={{ p: '$8' }}>
-      <Flex direction="column" align="center" justify="center">
-        <Box css={{ mb: '$2', color: '$textRed' }}>
-          <FaExclamationCircle size={24} />
-        </Box>
-        <Text size={4} variant="red" css={{ fontWeight: 600 }}>
-          An error occurred while processing your request. Please try again.
-        </Text>
-      </Flex>
-    </Card>
+    <Flex justify="center" css={{ mt: 200 }}>
+      <Oval height={80} width={80} color='#0091ff' secondaryColor='rgba(0, 0, 0, 0.54)' />
+    </Flex>
   )
 }
 
-export default SomethingWentWrong
+export default SuspenseFallback

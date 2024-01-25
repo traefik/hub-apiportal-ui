@@ -13,6 +13,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { Flex, Button, CSS } from '@traefiklabs/faency'
+import { useToasts } from 'context/toasts'
 import React, { useState, useEffect } from 'react'
 import { FaCopy } from 'react-icons/fa'
 
@@ -24,6 +25,7 @@ type CopyButtonProps = {
 }
 
 const CopyButton = ({ text, disabled, css, onClick }: CopyButtonProps) => {
+  const { addToast } = useToasts()
   const initialCopyState = 'Copy key'
   const [copyState, setCopyState] = useState(initialCopyState)
 
@@ -48,13 +50,23 @@ const CopyButton = ({ text, disabled, css, onClick }: CopyButtonProps) => {
         ...css,
       }}
       title={copyState}
-      onClick={async (e: React.MouseEvent): Promise<void> => {
+      onClick={(e: React.MouseEvent) => {
         e.stopPropagation()
-        setCopyState('Copied!')
         if (onClick) {
           onClick()
         }
-        await navigator.clipboard.writeText(text)
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            setCopyState('Copied!')
+          })
+          .catch(() => {
+            addToast({
+              severity: 'error',
+              message: 'Fail to copy token, please try again.',
+              timeout: 6000,
+            })
+          })
       }}
       disabled={disabled}
     >

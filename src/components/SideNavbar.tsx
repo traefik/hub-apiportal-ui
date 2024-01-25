@@ -12,29 +12,54 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import React, { useState } from 'react'
+import React, { useMemo } from 'react'
 import {
   Flex,
   H3,
-  NavigationContainer,
-  NavigationDrawer,
-  NavigationItem,
-  NavigationLink,
+  NavigationTreeDrawer,
   NavigationTreeContainer,
   NavigationTreeItem as FaencyNavTreeItem,
+  styled,
 } from '@traefiklabs/faency'
-import axios from 'axios'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { FaCog, FaFolder, FaFolderOpen, FaFileAlt } from 'react-icons/fa'
 import { FiPower } from 'react-icons/fi'
 
-import { Portal } from '../hooks/use-portal'
+import { Portal } from 'hooks/use-portal'
+import useIsUsingJWTAuth from 'hooks/use-is-using-jwt-auth'
+import COLORS from 'components/styles/colors'
 
-// import { useAuthDispatch, useAuthState } from 'context/auth'
-import { useToasts } from 'context/toasts'
-// import { handleLogOut } from 'context/auth/actions'
+const getPathWithoutVersion = (path: string) => {
+  const index = path.indexOf('/versions/')
+  return index >= 0 ? path.substring(0, index) : path
+}
 
-const CustomNavigationLink = NavigationLink as any
+const StyledNavItem = styled(FaencyNavTreeItem, {
+  color: COLORS.defaultText,
+  pl: '$5',
+})
+
+const customActiveNavButtonStyle = {
+  color: COLORS.primary,
+  '&:focus': {
+    color: COLORS.primary,
+    '&:before': {
+      backgroundColor: COLORS.lightBg,
+    },
+    '&:after': {
+      backgroundColor: '$navButtonHoverBg2',
+    },
+  },
+  '> div': {
+    zIndex: 1,
+  },
+  '&:before': {
+    backgroundColor: COLORS.lightBg,
+  },
+  '&:after': {
+    backgroundColor: '$navButtonHoverBg2',
+  },
+}
 
 const NavigationTreeItem = ({
   name,
@@ -58,9 +83,28 @@ const NavigationTreeItem = ({
   const { pathname } = useLocation()
   const navigate = useNavigate()
 
+  const isActive = useMemo(() => {
+    if (!specLink) return false
+
+    return getPathWithoutVersion(pathname) === getPathWithoutVersion(specLink)
+  }, [pathname, specLink])
+
+  const customCss = useMemo(() => {
+    if (!isActive)
+      return {
+        '&:focus': {
+          '&:after': {
+            backgroundColor: 'transparent',
+          },
+        },
+      }
+
+    return customActiveNavButtonStyle
+  }, [isActive])
+
   return (
-    <FaencyNavTreeItem
-      active={pathname === specLink}
+    <StyledNavItem
+      active={isActive}
       onClick={() => navigate(specLink as string)}
       css={
         disabled
@@ -71,7 +115,7 @@ const NavigationTreeItem = ({
               '&:hover': { cursor: 'default' },
               mt: '8px !important',
             }
-          : { textAlign: 'justify', width: '100%', mt: '8px !important' }
+          : { textAlign: 'justify', width: '100%', mt: '8px !important', ...customCss }
       }
       label={name}
       subtitle={subtitle}
@@ -81,7 +125,7 @@ const NavigationTreeItem = ({
       {...props}
     >
       {children}
-    </FaencyNavTreeItem>
+    </StyledNavItem>
   )
 }
 
@@ -90,50 +134,42 @@ type Props = {
 }
 
 const SideNavbar = ({ portal }: Props) => {
-  // const authDispatch = useAuthDispatch()
-  // const { user } = useAuthState()
-
   const { pathname } = useLocation()
+  const isUsingJWT = useIsUsingJWTAuth()
 
   const navigate = useNavigate()
 
   const { collectionName } = useParams()
 
-  const [isLoggingOut, setIsLoggingOut] = useState(false)
-
-  const { addToast } = useToasts()
-
-  const onLogOutClick = async () => {
-    setIsLoggingOut(true)
-    try {
-      await axios.get('/logout')
-      location.reload()
-    } catch (err) {
-      addToast({
-        severity: 'error',
-        message: 'Something went wrong while logging out, please try again later',
-        timeout: 60000,
-      })
-      console.error(err)
-    } finally {
-      setIsLoggingOut(false)
-    }
-  }
-
   return (
-    <NavigationDrawer css={{ backgroundColor: 'white', borderRight: '1px solid $gray4', width: 240 }} elevation={1}>
-      <NavigationContainer
+    <NavigationTreeDrawer
+      css={{
+        backgroundColor: COLORS.darkBg,
+        borderRight: `1px solid ${COLORS.border}`,
+        width: 240,
+        boxShadow: 'none',
+        height: 'calc(100vh - 90px)',
+        pb: 0,
+        pt: '$6',
+      }}
+      elevation={1}
+      fullWidth
+    >
+      <NavigationTreeContainer
         css={{
           flexGrow: 1,
+          overflowY: 'auto',
         }}
       >
         <>
           {portal?.collections?.length || portal?.apis?.length ? (
-            <H3 css={{ color: '$gray9', fontSize: '$3', margin: '$4 0 0 $2' }}>Available APIs</H3>
+            <H3 className="sl-text-paragraph" css={{ mb: '$4', pl: '$5', lineHeight: 1.375 }}>
+              Available APIs
+            </H3>
           ) : null}
           <Flex direction="column" css={{ mt: '$2' }}>
-            <NavigationTreeContainer defaultCollapseIcon={<FaFolderOpen />} defaultExpandIcon={<FaFolder />}>
-              {portal?.collections?.map((collection, index: number) => (
+            <NavigationTreeContainer defaultCollapseIcon={<FaFolderOpen />} defaultExpandIcon={<FaFolder />} fullWidth>
+              {portal?.collections?.map((collection: Collection.Resp, index: number) => (
                 <NavigationTreeItem
                   key={`sidenav-${index}`}
                   name={collection.name}
@@ -143,49 +179,44 @@ const SideNavbar = ({ portal }: Props) => {
                   defaultExpanded={collection.name === collectionName}
                 >
                   {collection.apis?.length &&
-                    collection.apis.map((api: { name: string; specLink: string; pathPrefix: string }, idx: number) => (
+                    collection.apis.map((api: API.Resp, idx: number) => (
                       <NavigationTreeItem
                         key={`sidenav-${index}-${idx}`}
                         name={api.name}
                         subtitle={api.pathPrefix}
-                        specLink={api.specLink}
+                        specLink={api.currentVersion ? `${api.specLink}/versions/${api.currentVersion}` : api.specLink}
                         type="api"
                       />
                     ))}
                 </NavigationTreeItem>
               ))}
             </NavigationTreeContainer>
-            {portal?.apis?.map((api, index: number) => (
+            {portal?.apis?.map((api: API.Resp, index: number) => (
               <NavigationTreeItem
                 key={`sidenav-api-${index}`}
                 name={api.name}
                 subtitle={api.pathPrefix}
-                specLink={api.specLink}
+                specLink={api.currentVersion ? `${api.specLink}/versions/${api.currentVersion}` : api.specLink}
                 type="api"
               />
             ))}
           </Flex>
         </>
-      </NavigationContainer>
-      <NavigationContainer>
-        <NavigationItem
+      </NavigationTreeContainer>
+      <NavigationTreeContainer css={{ borderTop: `1px solid ${COLORS.border}`, py: '$2' }}>
+        <StyledNavItem
+          label="Settings"
           active={pathname === '/settings'}
           startAdornment={<FaCog />}
           onClick={() => navigate('/settings')}
-        >
-          Settings
-        </NavigationItem>
-        {/* <Text css={{ pl: '$3', fontWeight: '500' }}>user?.username</Text> */}
-        <CustomNavigationLink
-          as="button"
-          onClick={onLogOutClick}
-          startAdornment={<FiPower />}
-          css={{ cursor: isLoggingOut ? 'wait' : 'pointer' }}
-        >
-          Log Out
-        </CustomNavigationLink>
-      </NavigationContainer>
-    </NavigationDrawer>
+          css={{
+            display: isUsingJWT ? 'none' : 'flex',
+            ...(pathname === '/settings' ? customActiveNavButtonStyle : {}),
+          }}
+        />
+        <StyledNavItem onClick={() => location.replace('/logout')} startAdornment={<FiPower />} label="Log out" />
+      </NavigationTreeContainer>
+    </NavigationTreeDrawer>
   )
 }
 

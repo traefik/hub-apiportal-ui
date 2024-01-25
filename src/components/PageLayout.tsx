@@ -12,36 +12,38 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import React from 'react'
-import { Box, Card, Container, Flex, H1, Text, VariantProps, CSS } from '@traefiklabs/faency'
+import React, { Suspense } from 'react'
+import { Box, Container, Flex, H1, Text, VariantProps, CSS, Image } from '@traefiklabs/faency'
 import { Helmet } from 'react-helmet-async'
 
 import SideNavbar from 'components/SideNavbar'
-import { Portal } from '../hooks/use-portal'
+import { Portal } from 'hooks/use-portal'
+import SuspenseFallback from 'components/SuspenseFallback'
+import COLORS from 'components/styles/colors'
 
 type Props = {
   portal?: Portal
   title?: string
   children?: React.ReactNode
-  hasCard?: boolean
   noGutter?: boolean
   containerSize?: VariantProps<typeof Container>['size']
   maxWidth?: CSS['maxWidth']
   contentAlignment?: 'default' | 'left'
+  fixedHeight?: boolean
 }
 
 const PageLayout = ({
   children,
   title,
   portal,
-  hasCard = true,
   noGutter = false,
-  containerSize = '3',
+  containerSize = '4',
   maxWidth,
   contentAlignment = 'default',
+  fixedHeight = false,
 }: Props) => {
   return (
-    <>
+    <Box css={{ margin: 'auto', border: `1px solid ${COLORS.border}` }}>
       <Helmet>
         <title>{title || 'API Portal'}</title>
       </Helmet>
@@ -51,13 +53,26 @@ const PageLayout = ({
           background: '#fff',
           color: '#222',
           width: '100%',
-          borderBottom: '1px solid $gray4',
-          padding: '$3',
+          borderBottom: `1px solid ${COLORS.border}`,
+          pl: '$4',
           gap: '$2',
           position: 'relative',
-          zIndex: 1,
+          height: 88,
         }}
       >
+        {!!portal?.logoUrl && (
+          <Image
+            src={portal?.logoUrl}
+            alt="logo"
+            css={{
+              border: '1px solid $grayA6',
+              boxSizing: 'border-box',
+              height: '$8',
+              width: '$8',
+              objectFit: 'contain',
+            }}
+          />
+        )}
         <H1 css={{ fontSize: '$6', color: 'inherit' }}>{portal?.title as string}</H1>
         <Text css={{ color: 'inherit', opacity: 0.7 }}>{portal?.description as string}</Text>
       </Flex>
@@ -66,15 +81,14 @@ const PageLayout = ({
         <Flex
           direction="column"
           css={{
-            backgroundColor: '$gray2',
             flex: 1,
-            height: 'calc(100vh - 58px)',
-            overflowY: 'auto',
+            height: `calc(100vh - 90px)`,
+            overflowY: fixedHeight ? 'hidden' : 'auto',
             position: 'relative',
-            py: '$3',
+            py: fixedHeight ? 0 : '$3',
           }}
         >
-          <Flex direction="column" css={{ flex: 1, pb: noGutter ? 0 : '$2' }}>
+          <Flex direction="column" css={{ flex: 1 }}>
             <Container
               size={containerSize}
               noGutter={noGutter}
@@ -85,21 +99,19 @@ const PageLayout = ({
                 width: '100%',
                 flex: 1,
                 mx: contentAlignment === 'left' ? 0 : 'auto',
+                px: 0,
               }}
             >
-              <Flex direction="column" css={{ flex: 1 }}>
-                {hasCard ? (
-                  <Card css={{ backgroundColor: 'white' }}>{children}</Card>
-                ) : (
-                  <Box css={{ p: '$3' }}>{children}</Box>
-                )}
+              <Flex direction="column" css={{ flex: 1, height: '100%' }}>
+                <Flex direction="column" css={{ p: noGutter ? 0 : '$3 $5', height: '100%' }}>
+                  <Suspense fallback={<SuspenseFallback />}>{children}</Suspense>
+                </Flex>
               </Flex>
-              {/* <Footer /> */}
             </Container>
           </Flex>
         </Flex>
       </Flex>
-    </>
+    </Box>
   )
 }
 

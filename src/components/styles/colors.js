@@ -12,15 +12,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import React from 'react'
-import { Flex, H1 } from '@traefiklabs/faency'
-
-const EmptyState = () => {
-  return (
-    <Flex direction="column" gap={3} align="center" justify="center" css={{ height: 500 }}>
-      <H1>No API is shared yet</H1>
-    </Flex>
-  )
+const COLORS = {
+  primary: '#0081cc',
+  lightBg: '#ebeef5',
+  darkBg: '#d5ddeb',
+  border: 'hsla(218, 32%, 78%, 0.5)',
+  defaultText: 'rgb(38, 38, 38)',
 }
 
-export default EmptyState
+export default COLORS
