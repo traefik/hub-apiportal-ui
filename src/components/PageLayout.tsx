@@ -43,7 +43,7 @@ const PageLayout = ({
   fixedHeight = false,
 }: Props) => {
   return (
-    <Box css={{ margin: 'auto', border: `1px solid ${COLORS.border}` }}>
+    <Box css={{ margin: 'auto', border: `1px solid ${COLORS.border}`, height: '100vh' }}>
       <Helmet>
         <title>{title || 'API Portal'}</title>
       </Helmet>
@@ -57,7 +57,7 @@ const PageLayout = ({
           pl: '$4',
           gap: '$2',
           position: 'relative',
-          height: 88,
+          height: 60,
         }}
       >
         {!!portal?.logoUrl && (
@@ -67,8 +67,8 @@ const PageLayout = ({
             css={{
               border: '1px solid $grayA6',
               boxSizing: 'border-box',
-              height: '$8',
-              width: '$8',
+              height: '$6',
+              width: '$6',
               objectFit: 'contain',
             }}
           />
@@ -82,7 +82,7 @@ const PageLayout = ({
           direction="column"
           css={{
             flex: 1,
-            height: `calc(100vh - 90px)`,
+            height: `calc(100vh - 61px)`,
             overflowY: fixedHeight ? 'hidden' : 'auto',
             position: 'relative',
             py: fixedHeight ? 0 : '$3',

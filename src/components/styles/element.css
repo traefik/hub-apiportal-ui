@@ -23086,5 +23086,17 @@ textarea {
 
 a[href*="https://stoplight.io/"]
 {
-  opacity: 0.5;
+  display: none;
+}
+
+.sl-elements > .sl-elements-api > div:first-child > div:first-child {
+  padding-top: 16px;
+}
+
+.sl-elements > .sl-elements-api > div:first-child > div:first-child > div:first-child {
+  margin-bottom: 8px;
+}
+
+.sl-elements > .sl-elements-api > div:nth-child(2) > div:first-child {
+  padding-top: 16px;
 }

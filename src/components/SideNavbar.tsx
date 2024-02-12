@@ -51,7 +51,7 @@ const customActiveNavButtonStyle = {
     },
   },
   '> div': {
-    zIndex: 1,
+    zIndex: 0,
   },
   '&:before': {
     backgroundColor: COLORS.lightBg,
@@ -148,9 +148,9 @@ const SideNavbar = ({ portal }: Props) => {
         borderRight: `1px solid ${COLORS.border}`,
         width: 240,
         boxShadow: 'none',
-        height: 'calc(100vh - 90px)',
+        height: 'calc(100vh - 61px)',
         pb: 0,
-        pt: '$6',
+        pt: '$4',
       }}
       elevation={1}
       fullWidth
@@ -163,11 +163,11 @@ const SideNavbar = ({ portal }: Props) => {
       >
         <>
           {portal?.collections?.length || portal?.apis?.length ? (
-            <H3 className="sl-text-paragraph" css={{ mb: '$4', pl: '$5', lineHeight: 1.375 }}>
+            <H3 className="sl-text-paragraph" css={{ mb: '$2', pl: '$5', lineHeight: 1.375 }}>
               Available APIs
             </H3>
           ) : null}
-          <Flex direction="column" css={{ mt: '$2' }}>
+          <Flex direction="column">
             <NavigationTreeContainer defaultCollapseIcon={<FaFolderOpen />} defaultExpandIcon={<FaFolder />} fullWidth>
               {portal?.collections?.map((collection: Collection.Resp, index: number) => (
                 <NavigationTreeItem
@@ -203,7 +203,7 @@ const SideNavbar = ({ portal }: Props) => {
           </Flex>
         </>
       </NavigationTreeContainer>
-      <NavigationTreeContainer css={{ borderTop: `1px solid ${COLORS.border}`, py: '$2' }}>
+      <NavigationTreeContainer css={{ borderTop: `1px solid ${COLORS.border}`, pt: '$2', pb: 0 }}>
         <StyledNavItem
           label="Settings"
           active={pathname === '/settings'}

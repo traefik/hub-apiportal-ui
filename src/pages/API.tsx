@@ -60,7 +60,7 @@ const APIVersion = ({ api, apiVersion, navigateToApiVersion, pathname, versions 
       <Select
         value={apiVersion}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => navigateToApiVersion(e.target.value)}
-        css={{ borderRadius: 0 }}
+        css={{ borderRadius: 0, width: '70%' }}
       >
         <optgroup label="Current version">
           {selectOptions.current.map((version: API.Version, key) => (
@@ -156,6 +156,28 @@ const API = () => {
 
   const hasMetaHeader = useMemo(() => !!rateLimitString || versions.length > 0, [rateLimitString, versions.length])
 
+  useEffect(() => {
+    let observer
+    const elements = document.querySelectorAll('a[href*="https://stoplight.io/"]')
+    if (elements.length > 0) {
+      elements.forEach((element) => element.remove())
+    } else {
+      observer = new MutationObserver(() => {
+        const elements = document.querySelectorAll('a[href*="https://stoplight.io/"]')
+        if (elements.length > 0) {
+          elements.forEach((element) => element.remove())
+        }
+      })
+      observer.observe(document, { subtree: true, childList: true })
+    }
+    return () => {
+      if (observer) {
+        observer.disconnect()
+        observer = null
+      }
+    }
+  }, [])
+
   return (
     <>
       <Helmet>
@@ -167,9 +189,8 @@ const API = () => {
           css={{
             gridTemplateColumns: versions.length > 0 ? '284px 1fr' : '1fr',
             pl: '$3',
-            py: '$5',
             borderBottom: '1px solid $gray4',
-            height: 85
+            py: '12px',
           }}
         >
           {versions.length > 0 ? (
@@ -189,7 +210,7 @@ const API = () => {
         css={{
           flex: 1,
           '> elements-api > div:first-child': {
-            height: `calc(100vh - ${hasMetaHeader ? '175' : '90'}px) !important`,
+            height: `calc(100vh - ${hasMetaHeader ? '118' : '61'}px) !important`,
           },
         }}
       >
