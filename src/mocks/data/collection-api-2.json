@@ -14,7 +14,7 @@
             }
           }
         },
-        "description": "Pet object that needs to be added to the store"
+        "description": "Pet object"
       },
       "UserArray": {
         "content": {
@@ -192,6 +192,10 @@
             ],
             "type": "string"
           },
+          "haveOwner": {
+            "description": "does the pet have an owner?",
+            "type": "boolean"
+          },
           "tags": {
             "items": {
               "$ref": "#/components/schemas/Tag"
@@ -311,7 +315,7 @@
   "paths": {
     "/pet": {
       "post": {
-        "description": "Add a new pet to the store",
+        "description": "Add a new pet",
         "operationId": "addPet",
         "requestBody": {
           "content": {
@@ -362,13 +366,13 @@
             ]
           }
         ],
-        "summary": "Add a new pet to the store",
+        "summary": "Add a new pet",
         "tags": [
           "pet"
         ]
       },
       "put": {
-        "description": "Update an existing pet by Id",
+        "description": "Update an existing pet",
         "operationId": "updatePet",
         "requestBody": {
           "content": {
@@ -1183,7 +1187,7 @@
   },
   "servers": [
     {
-      "url": "https://artistic-silkworm-otyofg.abcdef.traefik-hub.app/stores/petstore/api/v3"
+      "url": "https://artistic-silkworm-otyofg.abcdef.traefik-hub.app/petstore/api/v3"
     }
   ],
   "tags": [

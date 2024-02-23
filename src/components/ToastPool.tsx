@@ -18,7 +18,7 @@ import React, { useContext } from 'react'
 import { ToastContext } from 'context/toasts'
 import { PositionXProps, PositionYProps, getPositionValues } from 'utils/position'
 
-import Toast from './Toast'
+import Toast from 'components/Toast'
 
 type ToastPoolProps = {
   positionX?: PositionXProps

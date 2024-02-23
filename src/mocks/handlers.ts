@@ -14,49 +14,56 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 import { rest } from 'msw'
 
-import api from './api.json'
-import collectionApi from './collection-api.json'
-import tokens from './tokens.json'
+import { api1, api2, collection1, collection2, tokens } from 'mocks/data'
+import { portalMock } from 'mocks/portal'
+
+const getApiSpec = (req, res, ctx) => {
+  const { apiName, apiVersion } = req.params
+
+  // mock API with no OAS
+  if (apiName === 'no-oas') {
+    return res(
+      ctx.status(404),
+      ctx.json({
+        errorMessage: 'Not found',
+      }),
+    )
+  }
+
+  // mock API with OAS fetch failure
+  if (apiName === 'error-oas') {
+    return res(
+      ctx.status(502),
+      ctx.json({
+        errorMessage: 'Bad gateway',
+      }),
+    )
+  }
+  const data = JSON.parse(JSON.stringify(apiName.includes('2') ? api2 : api1))
+  data.info.title = `${data.info.title} - ${apiName}`
+  if (apiVersion) {
+    data.info.title = `${data.info.title} - ${apiVersion}`
+  }
+  return res(ctx.status(200), ctx.json(data))
+}
+
+const getCollectionSpec = (req, res, ctx) => {
+  const { apiName, apiVersion, collectionName } = req.params
+  const data = JSON.parse(JSON.stringify(apiName.includes('2') ? collection2 : collection1))
+  data.info.title = `${data.info.title} - ${collectionName} - ${apiName}`
+  if (apiVersion) {
+    data.info.title = `${data.info.title} - ${apiVersion}`
+  }
+  return res(ctx.status(200), ctx.json(data))
+}
 
 const waitAsync = (seconds: number) => new Promise((res) => setTimeout(res, seconds * 1000))
 
 export const handlers = [
-  rest.get('/api/', (req, res, ctx) => {
+  rest.get('/api/', (_, res, ctx) => {
     return res(
       ctx.status(200),
-      ctx.json({
-        title: 'my portal',
-        description: 'a description of my portal',
-        logoUrl: 'https://example.com/logo.png',
-        collections: [
-          {
-            name: 'my-empty-store-collection',
-            apis: [],
-          },
-          {
-            name: 'my-store-collection',
-            pathPrefix: '/api',
-            apis: [
-              {
-                name: 'my-petstore-api',
-                specLink: '/collections/my-store-collection/apis/my-petstore-api@petstore',
-                pathPrefix: '/prefix',
-              },
-            ],
-          },
-          {
-            name: 'my-store-collection-2',
-            apis: [
-              {
-                name: 'my-petstore-api-2',
-                specLink: '/collections/my-store-collection-2/apis/my-petstore-api-2@petstore',
-                pathPrefix: '/path',
-              },
-            ],
-          },
-        ],
-        apis: [{ name: 'my-petstore-api', specLink: '/apis/my-petstore-api@petstore', pathPrefix: '/api' }],
-      }),
+      ctx.json(portalMock),
 
       // Unauthorized user mock
       // ctx.status(401),
@@ -66,13 +73,13 @@ export const handlers = [
     )
   }),
 
-  rest.get('/api/apis/:apiName', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(api))
-  }),
+  rest.get('/api/apis/:apiName', getApiSpec),
 
-  rest.get('/api/collections/:collectionName/apis/:apiName', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(collectionApi))
-  }),
+  rest.get('/api/apis/:apiName/versions/:apiVersion', getApiSpec),
+
+  rest.get('/api/collections/:collectionName/apis/:apiName', getCollectionSpec),
+
+  rest.get('/api/collections/:collectionName/apis/:apiName/versions/:apiVersion', getCollectionSpec),
 
   rest.get('/logout', async (_, res, ctx) => {
     await waitAsync(1)

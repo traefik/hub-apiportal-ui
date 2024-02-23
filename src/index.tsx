@@ -14,7 +14,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App'
+import App from 'App'
 
 const container = document.getElementById('root')
 if (!container) {
@@ -23,7 +23,7 @@ if (!container) {
 
 function prepare() {
   if (process.env.NODE_ENV === 'development') {
-    return import('./mocks/browser').then(({ worker }) =>
+    return import('mocks/browser').then(({ worker }) =>
       worker.start({
         onUnhandledRequest: 'bypass',
       }),

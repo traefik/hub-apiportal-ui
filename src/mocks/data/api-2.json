@@ -14,7 +14,7 @@
             }
           }
         },
-        "description": "Pet object that needs to be added to the store"
+        "description": "Pet object"
       },
       "UserArray": {
         "content": {
@@ -143,11 +143,7 @@
           },
           "status": {
             "description": "Order Status",
-            "enum": [
-              "placed",
-              "approved",
-              "delivered"
-            ],
+            "enum": ["placed", "approved", "delivered"],
             "example": "approved",
             "type": "string"
           }
@@ -185,12 +181,12 @@
           },
           "status": {
             "description": "pet status in the store",
-            "enum": [
-              "available",
-              "pending",
-              "sold"
-            ],
+            "enum": ["available", "pending", "sold"],
             "type": "string"
+          },
+          "haveOwner": {
+            "description": "does the pet have an owner?",
+            "type": "boolean"
           },
           "tags": {
             "items": {
@@ -202,10 +198,7 @@
             }
           }
         },
-        "required": [
-          "name",
-          "photoUrls"
-        ],
+        "required": ["name", "photoUrls"],
         "type": "object",
         "xml": {
           "name": "pet"
@@ -311,7 +304,7 @@
   "paths": {
     "/pet": {
       "post": {
-        "description": "Add a new pet to the store",
+        "description": "Add a new pet",
         "operationId": "addPet",
         "requestBody": {
           "content": {
@@ -356,19 +349,14 @@
         },
         "security": [
           {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
+            "petstore_auth": ["write:pets", "read:pets"]
           }
         ],
-        "summary": "Add a new pet to the store",
-        "tags": [
-          "pet"
-        ]
+        "summary": "Add a new pet",
+        "tags": ["pet"]
       },
       "put": {
-        "description": "Update an existing pet by Id",
+        "description": "Update an existing pet",
         "operationId": "updatePet",
         "requestBody": {
           "content": {
@@ -419,16 +407,11 @@
         },
         "security": [
           {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
+            "petstore_auth": ["write:pets", "read:pets"]
           }
         ],
         "summary": "Update an existing pet",
-        "tags": [
-          "pet"
-        ]
+        "tags": ["pet"]
       }
     },
     "/pet/findByStatus": {
@@ -443,11 +426,7 @@
             "name": "status",
             "schema": {
               "default": "available",
-              "enum": [
-                "available",
-                "pending",
-                "sold"
-              ],
+              "enum": ["available", "pending", "sold"],
               "type": "string"
             }
           }
@@ -480,16 +459,11 @@
         },
         "security": [
           {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
+            "petstore_auth": ["write:pets", "read:pets"]
           }
         ],
         "summary": "Finds Pets by status",
-        "tags": [
-          "pet"
-        ]
+        "tags": ["pet"]
       }
     },
     "/pet/findByTags": {
@@ -538,16 +512,11 @@
         },
         "security": [
           {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
+            "petstore_auth": ["write:pets", "read:pets"]
           }
         ],
         "summary": "Finds Pets by tags",
-        "tags": [
-          "pet"
-        ]
+        "tags": ["pet"]
       }
     },
     "/pet/{petId}": {
@@ -579,16 +548,11 @@
         },
         "security": [
           {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
+            "petstore_auth": ["write:pets", "read:pets"]
           }
         ],
         "summary": "Deletes a pet",
-        "tags": [
-          "pet"
-        ]
+        "tags": ["pet"]
       },
       "get": {
         "description": "Returns a single pet",
@@ -633,16 +597,11 @@
             "api_key": []
           },
           {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
+            "petstore_auth": ["write:pets", "read:pets"]
           }
         ],
         "summary": "Find pet by ID",
-        "tags": [
-          "pet"
-        ]
+        "tags": ["pet"]
       },
       "post": {
         "operationId": "updatePetWithForm",
@@ -681,16 +640,11 @@
         },
         "security": [
           {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
+            "petstore_auth": ["write:pets", "read:pets"]
           }
         ],
         "summary": "Updates a pet in the store with form data",
-        "tags": [
-          "pet"
-        ]
+        "tags": ["pet"]
       }
     },
     "/pet/{petId}/uploadImage": {
@@ -740,16 +694,11 @@
         },
         "security": [
           {
-            "petstore_auth": [
-              "write:pets",
-              "read:pets"
-            ]
+            "petstore_auth": ["write:pets", "read:pets"]
           }
         ],
         "summary": "uploads an image",
-        "tags": [
-          "pet"
-        ]
+        "tags": ["pet"]
       }
     },
     "/store/inventory": {
@@ -778,9 +727,7 @@
           }
         ],
         "summary": "Returns pet inventories by status",
-        "tags": [
-          "store"
-        ]
+        "tags": ["store"]
       }
     },
     "/store/order": {
@@ -822,9 +769,7 @@
           }
         },
         "summary": "Place an order for a pet",
-        "tags": [
-          "store"
-        ]
+        "tags": ["store"]
       }
     },
     "/store/order/{orderId}": {
@@ -852,9 +797,7 @@
           }
         },
         "summary": "Delete purchase order by ID",
-        "tags": [
-          "store"
-        ]
+        "tags": ["store"]
       },
       "get": {
         "description": "For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.",
@@ -895,9 +838,7 @@
           }
         },
         "summary": "Find purchase order by ID",
-        "tags": [
-          "store"
-        ]
+        "tags": ["store"]
       }
     },
     "/user": {
@@ -942,9 +883,7 @@
           }
         },
         "summary": "Create user",
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       }
     },
     "/user/createWithList": {
@@ -984,9 +923,7 @@
           }
         },
         "summary": "Creates list of users with given input array",
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       }
     },
     "/user/login": {
@@ -1047,9 +984,7 @@
           }
         },
         "summary": "Logs user into the system",
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       }
     },
     "/user/logout": {
@@ -1061,9 +996,7 @@
           }
         },
         "summary": "Logs out current logged in user session",
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       }
     },
     "/user/{username}": {
@@ -1090,9 +1023,7 @@
           }
         },
         "summary": "Delete user",
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       },
       "get": {
         "operationId": "getUserByName",
@@ -1131,9 +1062,7 @@
           }
         },
         "summary": "Get user by user name",
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       },
       "put": {
         "description": "This can only be done by the logged in user.",
@@ -1175,15 +1104,13 @@
           }
         },
         "summary": "Update user",
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       }
     }
   },
   "servers": [
     {
-      "url": "https://artistic-silkworm-otyofg.abcdef.traefik-hub.app/petstore/api/v3"
+      "url": "https://petstore.swagger.io/v2"
     }
   ],
   "tags": [

@@ -12,15 +12,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import React from 'react'
-import { Flex, H1 } from '@traefiklabs/faency'
+import { describe, test, expect } from 'vitest'
+import { getPositionValues } from 'utils/position'
 
-const EmptyState = () => {
-  return (
-    <Flex direction="column" gap={3} align="center" justify="center" css={{ height: 500 }}>
-      <H1>No API is shared yet</H1>
-    </Flex>
-  )
-}
-
-export default EmptyState
+describe('utils/position', () => {
+  describe('getPositionValues', () => {
+    test.each([
+      { payload: ['left', 'bottom'], expected: { left: 0, bottom: 0 } },
+      { payload: ['right', 'top'], expected: { right: 0, top: 0 } },
+      { payload: [], expected: { left: 0, right: 0, bottom: 0 } },
+    ])('must return "$expected" for $payload', ({ payload, expected }) => {
+      expect(getPositionValues(...(payload as any))).toStrictEqual(expected)
+    })
+  })
+})

@@ -35,13 +35,14 @@ import axios from 'axios'
 import React, { useCallback, useState } from 'react'
 import { BiDotsVerticalRounded } from 'react-icons/bi'
 import { FaPauseCircle, FaPlayCircle, FaPlus, FaTrash } from 'react-icons/fa'
-import { useQuery, useQueryClient } from 'react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import SomethingWentWrong from 'components/SomethingWentWrong'
 import AriaTdSkeleton from 'components/tables/AriaTdSkeleton'
 import { useToasts } from 'context/toasts'
 
-import NewTokenModal from './NewTokenModal'
+import NewTokenModal from 'components/settings/NewTokenModal'
+import COLORS from 'components/styles/colors'
 
 type TokenRowProps = {
   token: Settings.Token
@@ -105,12 +106,12 @@ export const TokenRow = ({ token }: TokenRowProps) => {
       <AriaTd css={{ textAlign: 'right' }}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button ghost>
-              <BiDotsVerticalRounded size={24} />
+            <Button ghost css={{ borderRadius: 0 }}>
+              <BiDotsVerticalRounded color={COLORS.primary} size={24} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuPortal>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" css={{ borderRadius: 0 }}>
               <DropdownMenuGroup>
                 <DropdownMenuItem css={{ cursor: 'pointer' }} onClick={onSuspendClick}>
                   <Flex align="center" gap={2}>
@@ -149,7 +150,7 @@ export const TokensListHead = ({
         </AriaTh>
         <AriaTh css={{ textAlign: 'right' }}>
           <Box css={{ pt: '$2', pb: '$2' }}>
-            <Button onClick={onCreateTokenClick}>
+            <Button onClick={onCreateTokenClick} css={{ borderRadius: 0, backgroundColor: COLORS.primary }}>
               <Flex align="center" justify="between" gap={1}>
                 <FaPlus size={16} />
                 <Text css={{ color: 'currentColor' }}>Create token</Text>
@@ -162,11 +163,63 @@ export const TokensListHead = ({
   )
 }
 
-type TokensListProps = {
-  tokens: Settings.Token[]
-}
+export const TokensListBody = ({ tokens }: { tokens: Settings.Token[] }) => (
+  <AriaTbody>
+    {tokens?.map((token, idx) => (
+      <TokenRow key={`token-${idx}`} token={token} />
+    ))}
+  </AriaTbody>
+)
 
-export const TokensList = ({ tokens }: TokensListProps) => {
+export const TokensListError = () => (
+  <AriaTbody>
+    <AriaTr css={{ position: 'relative' }}>
+      <AriaTd fullColSpan>
+        <SomethingWentWrong variant="ghost" />
+      </AriaTd>
+    </AriaTr>
+  </AriaTbody>
+)
+
+export const TokensListEmptyState = () => (
+  <AriaTbody>
+    <AriaTr css={{ height: '81px' }}>
+      <AriaTd>
+        <Text css={{ color: '$blackA12' }}>No tokens</Text>
+      </AriaTd>
+    </AriaTr>
+  </AriaTbody>
+)
+
+export const TokensListSkeleton = () => (
+  <AriaTbody>
+    {[...Array(3)].map((_, i) => (
+      <AriaTr key={i} css={{ height: '81px' }}>
+        <AriaTdSkeleton css={{ width: '50%' }} />
+        <AriaTd />
+      </AriaTr>
+    ))}
+  </AriaTbody>
+)
+
+export const TokensListWithData = () => {
+  const fetchUrl = `/api/tokens`
+  const {
+    isLoading,
+    error,
+    data: tokens,
+  } = useQuery<Settings.Token[]>({
+    queryKey: [fetchUrl],
+
+    queryFn: () =>
+      axios
+        .get(fetchUrl)
+        .catch((err) => {
+          throw err
+        })
+        .then(({ data }) => data),
+  })
+
   const queryClient = useQueryClient()
 
   const [isNewTokenModalOpen, setIsNewTokenModalOpen] = useState(false)
@@ -178,54 +231,23 @@ export const TokensList = ({ tokens }: TokensListProps) => {
 
   return (
     <>
-      <AriaTable css={{ tableLayout: 'auto' }}>
+      <AriaTable
+        css={{ tableLayout: 'auto', borderRadius: 0, boxShadow: 'none', border: `1px solid ${COLORS.border}` }}
+      >
         <TokensListHead onCreateTokenClick={() => setIsNewTokenModalOpen(true)} />
-        <AriaTbody>
-          {tokens.map((token, idx) => (
-            <TokenRow key={`token-${idx}`} token={token} />
-          ))}
-        </AriaTbody>
+        {!!isLoading && <TokensListSkeleton />}
+        {!!error && <TokensListError />}
+        {!!tokens && (tokens.length ? <TokensListBody tokens={tokens} /> : <TokensListEmptyState />)}
       </AriaTable>
       {isNewTokenModalOpen && (
         <NewTokenModal
           isOpen={isNewTokenModalOpen}
           onComplete={onNewTokenModalComplete}
-          onOpenChange={setIsNewTokenModalOpen}
+          onOpenChange={() => onNewTokenModalComplete()}
         />
       )}
     </>
   )
-}
-
-export const TokensListSkeleton = () => {
-  return (
-    <AriaTable css={{ tableLayout: 'auto' }}>
-      <TokensListHead />
-      <AriaTbody>
-        {[...Array(3)].map((_, i) => (
-          <AriaTr key={i}>
-            <AriaTdSkeleton css={{ width: '50%' }} />
-            <AriaTd />
-          </AriaTr>
-        ))}
-      </AriaTbody>
-    </AriaTable>
-  )
-}
-
-export const TokensListWithData = () => {
-  const fetchUrl = `/api/tokens`
-  const { isLoading, error, data: tokens } = useQuery(fetchUrl, () => axios.get(fetchUrl).then(({ data }) => data))
-
-  if (isLoading) {
-    return <TokensListSkeleton />
-  }
-
-  if (error) {
-    return <SomethingWentWrong />
-  }
-
-  return <TokensList tokens={tokens} />
 }
 
 export default TokensListWithData

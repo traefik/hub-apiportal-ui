@@ -56,7 +56,7 @@ yarn install
 yarn start
 ```
 
-The application is running at [http://localhost:3000](http://localhost:3000 "Link to localhost on port 3000") in dev mode.
+The application is running at [http://localhost:3003](http://localhost:3003 "Link to localhost on port 3003") in dev mode.
 
 The local setup uses a Service Worker to intercept HTTP calls and inject a mocked reply.
 

@@ -12,23 +12,22 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Box, Card, Flex, Text } from '@traefiklabs/faency'
 import React from 'react'
-import { FaExclamationCircle } from 'react-icons/fa'
+import { Box, Flex, H2, Text } from '@traefiklabs/faency'
 
-export const SomethingWentWrong = ({ variant }: { variant?: 'inner' | 'ghost' }) => {
+const WarningMessage = () => {
+  const fontCss = {
+    fontSize: '$5',
+  }
   return (
-    <Card variant={variant} css={{ p: '$8' }}>
-      <Flex direction="column" align="center" justify="center">
-        <Box css={{ mb: '$2', color: '$textRed' }}>
-          <FaExclamationCircle size={24} />
-        </Box>
-        <Text size={4} variant="red" css={{ fontWeight: 600 }}>
-          An error occurred while processing your request. Please try again.
-        </Text>
+    <Box css={{ py: '$8', px: '$4' }}>
+      <H2 css={{ mb: '$6' }}>Hey there! 👋</H2>
+      <Flex direction="column" gap={3}>
+        <Text css={fontCss}>You see this message because the API is published without an OpenAPI specification.</Text>
+        <Text css={fontCss}>Don&apos;t worry, the API is functional!</Text>
       </Flex>
-    </Card>
+    </Box>
   )
 }
 
-export default SomethingWentWrong
+export default WarningMessage
