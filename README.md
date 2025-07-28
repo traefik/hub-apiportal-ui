@@ -47,6 +47,7 @@ A sample Deployment and Service can be found in the [manifest.yaml](./manifest.y
 1. Installing dependencies:
 
 ```shell
+corepack enable
 yarn install
 ```
 

@@ -65,5 +65,6 @@
   },
   "msw": {
     "workerDirectory": "public"
-  }
+  },
+  "packageManager": "yarn@4.9.2"
 }
