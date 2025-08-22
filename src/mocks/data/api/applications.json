@@ -1,0 +1,158 @@
+[
+  {
+    "id": "67360a0e2214ac56d9b65125",
+    "appId": "6bc1160e-663e-454a-bc46-1ef0ab0cb5b4",
+    "name": "application-1",
+    "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "owner": "668ff96fb5e6dcb93a95f5e2",
+    "isManaged": false,
+    "apiKeys": [
+      {
+        "createdAt": "2024-11-07T13:43:33.391Z",
+        "updatedAt": "2024-11-07T13:43:33.391Z",
+        "suspended": false,
+        "title": "my-first-api-key"
+      },
+      {
+        "createdAt": "2024-11-08T14:44:33.391Z",
+        "updatedAt": "2024-11-08T14:44:33.391Z",
+        "suspended": false,
+        "title": "my-second-api-key"
+      },
+      {
+        "createdAt": "2024-11-09T15:45:33.391Z",
+        "updatedAt": "2024-11-09T15:55:33.391Z",
+        "suspended": true,
+        "title": "my-third-api-key-with-a-really-really-really-really-really-long-title"
+      }
+    ],
+    "subscriptions": [
+      {
+        "createdAt": "2024-12-17T09:50:30.187Z",
+        "suspended": true,
+        "api": {
+          "name": "no-oas-suspended",
+          "namespace": "default",
+          "title": "Empty API"
+        },
+        "id": "subscription-1",
+        "name": "",
+        "isManaged": false,
+        "plan": {
+          "title": "Free",
+          "description": "",
+          "name": "free-plan",
+          "rateLimit": {
+            "limit": 1,
+            "period": "30s"
+          }
+        }
+      },
+      {
+        "createdAt": "2024-12-03T08:56:20.192Z",
+        "suspended": false,
+        "api": {
+          "name": "my-api",
+          "namespace": "petstore",
+          "title": "My API"
+        },
+        "id": "subscription123",
+        "name": "",
+        "isManaged": false,
+        "plan": {
+          "title": "Silver",
+          "description": "Silver Plan description",
+          "name": "silver-plan",
+          "rateLimit": {
+            "limit": 5,
+            "period": "1s"
+          },
+          "quota": {
+            "limit": 75,
+            "period": "1h",
+            "current": 30
+          }
+        }
+      },
+      {
+        "createdAt": "2024-11-07T13:43:33.391Z",
+        "suspended": false,
+        "api": {
+          "name": "my-api-2",
+          "namespace": "petstore",
+          "title": "Petstore"
+        },
+        "id": "",
+        "name": "managed-subs",
+        "isManaged": true,
+        "plan": {
+          "title": "Silver",
+          "description": "Standard Plan description",
+          "name": "silver-plan",
+          "rateLimit": {
+            "limit": 15,
+            "period": "1s"
+          },
+          "quota": {
+            "limit": 75,
+            "period": "1h",
+            "current": 0
+          },
+          "operationFilter": {
+            "include": [
+              "operation1",
+              "operation2"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "appId": "my-managed-application",
+    "name": "application-2",
+    "owner": "668ff96fb5e6dcb93a95f5e2",
+    "isManaged": true,
+    "apiKeys": [
+      {
+        "suspended": false,
+        "title": "my-managed-api-key"
+      }
+    ],
+    "subscriptions": [
+      {
+        "createdAt": "2024-11-09T15:45:33.391Z",
+        "suspended": false,
+        "api": {
+          "name": "my-api",
+          "namespace": "petstore",
+          "title": "Customer API"
+        },
+        "id": "",
+        "name": "managed-subs",
+        "isManaged": true,
+        "plan": {
+          "title": "Gold",
+          "description": "Standard Plan description",
+          "name": "gold-plan",
+          "rateLimit": {
+            "limit": 10,
+            "period": "1s"
+          },
+          "quota": {
+            "limit": 100,
+            "period": "1h",
+            "current": 30
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "7a59610e448f8bf322eb191a",
+    "appId": "c28b00c5-a3a7-40c3-85e2-52d9175b5880",
+    "name": "application-3",
+    "owner": "668ff96fb5e6dcb93a95f5e2",
+    "isManaged": false
+  }
+]

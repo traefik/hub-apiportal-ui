@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022-2023 Traefik Labs
+Copyright (C) 2022-2025 Traefik Labs
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
 by the Free Software Foundation, either version 3 of the License, or
@@ -13,8 +13,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 // src/mocks/browser.js
-import { setupWorker } from 'msw'
-import { handlers } from 'mocks/handlers'
+import { setupWorker } from 'msw/browser'
+
+import { getHandlers } from 'mocks/handlers'
 
 // This configures a Service Worker with the given request handlers.
-export const worker = setupWorker(...handlers)
+export const worker = setupWorker(...getHandlers())

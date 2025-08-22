@@ -1,0 +1,40 @@
+:root,
+[data-theme='light'] {
+  --borders-layoutSection: 1px solid hsla(218, 32%, 78%, 0.5);
+  --borders-button: 2px solid hsla(218, 32%, 78%, 0.5);
+  --colors-bodyBackground: #fff;
+  --colors-navbarBackground: #d5ddeb;
+  --colors-navbarItemBackgroundActive: #ebeef5;
+  --colors-textPrimary: #7f8c2b;
+
+  --colors-headingDefault: #262626;
+  --colors-textDefault: #262626;
+}
+
+[data-theme='dark'] {
+  --borders-layoutSection: 1px solid rgba(49, 62, 84, 0.5);
+  --borders-button: 2px solid rgba(49, 62, 84, 0.5);
+  --colors-bodyBackground: #0e121b;
+  --colors-navbarBackground: #0d1419;
+  --colors-navbarItemBackgroundActive: #1a212d;
+  --colors-textPrimary: #d5ea48;
+
+  --colors-headingDefault: #d8d8d8;
+  --colors-textDefault: #d8d8d8;
+}
+
+body {
+  background-color: var(--colors-bodyBackground);
+}
+
+[data-theme='dark'] .sl-code-viewer :is(.token.property, .token.punctuation) {
+  color: var(--ifm-color-primary) !important;
+}
+
+[data-theme='dark'] .sl-code-viewer :is(.token.operator) {
+  color: var(--color-text-light) !important;
+}
+
+[data-theme='dark'] .sl-code-viewer :is(.token.boolean, .token.keyword, .token.function, .token.number, .token.string) {
+  color: var(--color-text-primary) !important;
+}

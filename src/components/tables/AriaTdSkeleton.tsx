@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022-2023 Traefik Labs
+Copyright (C) 2022-2025 Traefik Labs
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
 by the Free Software Foundation, either version 3 of the License, or
@@ -20,12 +20,12 @@ interface AriaTdSkeletonProps extends VariantProps<typeof Skeleton> {
   flexCss?: CSS
 }
 
-export const AriaTdSkeleton = ({ css = {}, flexCss = {} }: AriaTdSkeletonProps) => (
-  <AriaTd css={{ height: 38 }}>
-    <Flex css={{ flexDirection: 'column', justifyContent: 'space-around', alignItems: 'flex-start', ...flexCss }}>
-      <Skeleton variant="text" css={css} />
-    </Flex>
-  </AriaTd>
-)
-
-export default AriaTdSkeleton
+export default function AriaTdSkeleton({ css = {}, flexCss = {} }: AriaTdSkeletonProps) {
+  return (
+    <AriaTd>
+      <Flex css={{ flexDirection: 'column', justifyContent: 'space-around', alignItems: 'flex-start', ...flexCss }}>
+        <Skeleton variant="text" css={{ borderRadius: 0, ...css }} />
+      </Flex>
+    </AriaTd>
+  )
+}

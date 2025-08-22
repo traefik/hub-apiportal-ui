@@ -1,23 +1,24 @@
 default: build
 
-IMAGE_NAME := hub-portal-ui
-TAG_NAME := $(shell git tag -l --contains HEAD)
-SHA := $(shell git rev-parse --short HEAD)
-VERSION ?= $(if $(TAG_NAME),$(TAG_NAME),$(SHA))
+SRCS := $(shell find src/ -name '*.tsx' -o -name '*.ts')
+STATICS := $(shell find public -type f)
 
-lint:
-	yarn lint
+.PHONY: start
+start: yarn.lock
+	@yarn start
 
-start:
-	yarn install && yarn start
+.PHONY: lint
+lint: yarn.lock
+	@yarn lint
 
-build: lint
-	yarn install && yarn build
+.PHONY: build
+build: dist/.build-sentinel
 
-image:
-	docker build -t $(IMAGE_NAME):$(VERSION) .
+dist/.build-sentinel: $(SRCS) $(STATICS) index.tmpl.html package.json vite.config.mts
+	@mkdir -p dist
+	docker buildx build -f buildx.Dockerfile --output type=local,dest=. .
+	@touch $@
 
+.PHONY: clean
 clean:
-	rm -rf ./build
-
-.PHONY: start lint build image clean
+	rm -rf dist

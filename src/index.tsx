@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022-2023 Traefik Labs
+Copyright (C) 2022-2025 Traefik Labs
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
 by the Free Software Foundation, either version 3 of the License, or
@@ -14,6 +14,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'
+
 import App from 'App'
 
 const container = document.getElementById('root')

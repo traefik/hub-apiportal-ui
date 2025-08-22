@@ -1,0 +1,86 @@
+[
+  {
+    "application": {
+      "name": "application-1",
+      "appId": "6bc1160e-663e-454a-bc46-1ef0ab0cb5b4"
+    },
+    "apis": [
+      {
+        "title": "Customer",
+        "name": "my-api",
+        "namespace": "petstore"
+      }
+    ],
+    "plan": {
+      "title": "Gold",
+      "description": "Standard Plan description",
+      "name": "gold-plan",
+      "rateLimit": {
+        "limit": 10,
+        "period": "1s"
+      },
+      "quota": {
+        "limit": 100,
+        "period": "1h",
+        "current": 30
+      }
+    }
+  },
+  {
+    "application": {
+      "name": "application-1",
+      "appId": "6bc1160e-663e-454a-bc46-1ef0ab0cb5b4"
+    },
+    "apis": [
+      {
+        "name": "my-api-2",
+        "namespace": "petstore"
+      }
+    ],
+    "plan": {
+      "title": "Standard",
+      "description": "Standard Plan description",
+      "name": "standard-plan",
+      "rateLimit": {
+        "limit": 1,
+        "period": "1s"
+      },
+      "quota": {
+        "limit": 50,
+        "period": "1h",
+        "current": 10
+      }
+    }
+  },
+  {
+    "application": {
+      "name": "application-2",
+      "appId": "my-managed-application"
+    },
+    "apis": [
+      {
+        "title": "Customer",
+        "name": "my-api",
+        "namespace": "petstore"
+      },
+      {
+        "name": "my-api-2",
+        "namespace": "petstore"
+      }
+    ],
+    "plan": {
+      "title": "Silver",
+      "description": "Standard Plan description",
+      "name": "silver-plan",
+      "rateLimit": {
+        "limit": 5,
+        "period": "1s"
+      },
+      "quota": {
+        "limit": 75,
+        "period": "1h",
+        "current": 0
+      }
+    }
+  }
+]

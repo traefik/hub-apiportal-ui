@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022-2023 Traefik Labs
+Copyright (C) 2022-2025 Traefik Labs
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
 by the Free Software Foundation, either version 3 of the License, or
@@ -12,23 +12,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { describe, test, expect } from 'vitest'
-import { getExtendedUnit, parseDuration } from 'utils/time'
+
+import { parseDuration } from 'utils/time'
 
 describe('utils/time', () => {
-  describe('getExtendedUnit', () => {
-    test.each([
-      { payload: { period: 1, unit: 'h' }, expected: 'hour' },
-      { payload: { period: 2, unit: 'h' }, expected: 'hours' },
-      { payload: { period: 1, unit: 'm' }, expected: 'minute' },
-      { payload: { period: 2, unit: 'm' }, expected: 'minutes' },
-      { payload: { period: 1, unit: 's' }, expected: 'second' },
-      { payload: { period: 2, unit: 's' }, expected: 'seconds' },
-      { payload: { period: 0, unit: 'z' }, expected: '?' },
-    ])('must return "$expected" for $payload', ({ payload, expected }) => {
-      expect(getExtendedUnit(payload)).toBe(expected)
-    })
-  })
-
   describe('parseDuration', () => {
     test.each([
       { payload: '', expected: undefined },

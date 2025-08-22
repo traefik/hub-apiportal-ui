@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022-2023 Traefik Labs
+Copyright (C) 2022-2025 Traefik Labs
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
 by the Free Software Foundation, either version 3 of the License, or
@@ -12,25 +12,25 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import React, { lazy, useEffect, useMemo } from 'react'
-import axios from 'axios'
-import { FaencyProvider, globalCss, lightTheme } from '@traefiklabs/faency'
-import PageLayout from 'components/PageLayout'
-import { BrowserRouter, Navigate, Route, Routes as RouterRoutes } from 'react-router-dom'
-import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+import { FaencyProvider, darkTheme, globalCss, lightTheme } from '@traefiklabs/faency'
+import axios from 'axios'
+import React, { useEffect } from 'react'
+import { Helmet, HelmetProvider } from 'react-helmet-async'
+import { BrowserRouter } from 'react-router-dom'
+import { QueryParamProvider } from 'use-query-params'
+import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6'
 
-import ToastPool from 'components/ToastPool'
+import ToastPool from 'components/layouts/ToastPool'
 import { ToastProvider } from 'context/toasts'
-import { usePortal } from 'hooks/use-portal'
-import EmptyState from 'pages/EmptyState'
-import useIsUsingJWTAuth from 'hooks/use-is-using-jwt-auth'
-import NotFoundPage from 'pages/404'
+import { useDarkMode } from 'hooks/use-dark-mode'
+import Routes from 'Routes'
 
-const API = lazy(() => import('pages/API'))
-const Settings = lazy(() => import('pages/Settings'))
+import 'components/styles/element.css'
+import 'components/styles/theme.css'
 
-const queryClient = new QueryClient()
+const LIGHT_THEME = lightTheme('neon')
+const DARK_THEME = darkTheme('neon')
 
 /* axios global setup to handle 401 error status
  ** reload page when user's session end to initiate the auth flow
@@ -48,15 +48,6 @@ axios.interceptors.response.use(
   },
 )
 
-const API_PATHS = [
-  '/apis/:apiName',
-  '/apis/:apiName/versions/:apiVersion',
-  '/collections/:collectionName/apis/:apiName',
-  '/collections/:collectionName/apis/:apiName/versions/:apiVersion',
-]
-
-const light = lightTheme('blue')
-
 const bodyGlobalStyle = globalCss({
   body: {
     boxSizing: 'border-box',
@@ -64,90 +55,51 @@ const bodyGlobalStyle = globalCss({
   },
 })
 
-const Routes = () => {
-  const { data: portal } = usePortal()
-  const isUsingJWT = useIsUsingJWTAuth()
+const queryClient = new QueryClient()
 
-  const defaultRoute = useMemo(() => {
-    if (portal?.collections) {
-      for (let i = 0; i < portal.collections.length; i++) {
-        if (portal.collections[i].apis?.length) {
-          return portal.collections[i].apis[0].specLink
-        }
-      }
-    }
+export default function App() {
+  const { isDarkMode } = useDarkMode()
 
-    return portal?.apis?.[0]?.specLink
-  }, [portal])
-
-  return (
-    <>
-      <Helmet>
-        <script src="https://unpkg.com/@stoplight/elements/web-components.min.js"></script>
-      </Helmet>
-      <RouterRoutes>
-        {bodyGlobalStyle()}
-        <Route
-          path="/"
-          element={
-            defaultRoute ? (
-              <Navigate to={defaultRoute} replace />
-            ) : (
-              <PageLayout portal={portal}>
-                <EmptyState />
-              </PageLayout>
-            )
-          }
-        />
-        {API_PATHS.map((path, key) => (
-          <Route
-            key={key}
-            path={path}
-            element={
-              <PageLayout portal={portal} noGutter fixedHeight>
-                <API />
-              </PageLayout>
-            }
-          />
-        ))}
-        {!isUsingJWT && (
-          <Route
-            path="/settings"
-            element={
-              <PageLayout portal={portal}>
-                <Settings />
-              </PageLayout>
-            }
-          />
-        )}
-        <Route
-          path="*"
-          element={
-            <PageLayout portal={portal}>
-              <NotFoundPage />
-            </PageLayout>
-          }
-        />
-      </RouterRoutes>
-    </>
-  )
-}
-
-const App = () => {
   useEffect(() => {
-    document.body.classList.add(light.toString())
-  }, [])
+    if (isDarkMode) {
+      document.documentElement.classList.remove(LIGHT_THEME)
+      document.documentElement.classList.add(DARK_THEME)
+      document.documentElement.dataset.theme = 'dark'
+      localStorage.setItem('mosaic-theme', `{"mode":"dark","version":0}`)
+    } else {
+      document.documentElement.classList.remove(DARK_THEME)
+      document.documentElement.classList.add(LIGHT_THEME)
+      document.documentElement.dataset.theme = 'light'
+      localStorage.setItem('mosaic-theme', `{"mode":"light","version":0}`)
+    }
+  }, [isDarkMode])
 
   return (
     <ToastProvider>
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
           <FaencyProvider>
-            <BrowserRouter>
-              <>
-                <Routes />
-                <ToastPool />
-              </>
+            <BrowserRouter
+              basename={
+                window.portalAPIBasePath.endsWith('/')
+                  ? window.portalAPIBasePath.slice(0, -1)
+                  : window.portalAPIBasePath
+              }
+              future={{
+                v7_relativeSplatPath: true,
+                v7_startTransition: false,
+              }}
+            >
+              <QueryParamProvider adapter={ReactRouter6Adapter}>
+                <>
+                  {bodyGlobalStyle()}
+                  <Helmet>
+                    <script src="https://unpkg.com/@stoplight/elements@9.0.0/web-components.min.js"></script>
+                  </Helmet>
+                  <Routes />
+                  <ToastPool />
+                </>
+              </QueryParamProvider>
             </BrowserRouter>
           </FaencyProvider>
         </HelmetProvider>
@@ -155,5 +107,3 @@ const App = () => {
     </ToastProvider>
   )
 }
-
-export default App

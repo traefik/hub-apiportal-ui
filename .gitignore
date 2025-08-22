@@ -47,9 +47,8 @@ Thumbs.db
 # env
 .env
 
-# static assets (ignore all except the DO NOT EDIT file)
+# static assets
 dist/*
-!dist/DONT-EDIT-FILES-IN-THIS-DIRECTORY.md
 
 # yarn berry with no zero-installs
 .pnp.*

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022-2023 Traefik Labs
+Copyright (C) 2022-2025 Traefik Labs
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
 by the Free Software Foundation, either version 3 of the License, or
@@ -12,12 +12,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import React, { useMemo, useState, useCallback, createContext, useContext } from 'react'
+import React from 'react'
 
-import { ToastState } from 'components/Toast'
+import { ToastState } from 'components/layouts/Toast'
 
-const hideToastFilter = (toast: ToastState) => (t: ToastState) => {
-  return t.key !== toast.key
+function handleHideToast(toast: ToastState): (t: ToastState) => ToastState {
+  return (t: ToastState): ToastState => {
+    if (t === toast) {
+      t.isVisible = false
+    }
+    return t
+  }
 }
 
 interface ToastProviderProps {
@@ -26,42 +31,24 @@ interface ToastProviderProps {
 
 interface ToastContextProps {
   toasts: ToastState[]
-  addToast: (toast: ToastState) => ToastState
+  addToast: (toast: ToastState) => void
   hideToast: (toast: ToastState) => void
-  hideAllToasts: () => void
 }
 
-export const ToastContext = createContext({} as ToastContextProps)
+export const ToastContext = React.createContext({} as ToastContextProps)
 
 export const ToastProvider = (props: ToastProviderProps) => {
-  const [toasts, setToastList] = useState<ToastState[]>([])
-  const addToast = useCallback(
-    (toast: ToastState) => {
-      toast.key = Date.now()
-      setToastList((toasts) => [...toasts, toast])
+  const [toasts, setToastList] = React.useState<ToastState[]>([])
 
-      return toast
-    },
-    [setToastList],
-  )
+  const addToast = React.useCallback((toast: ToastState) => {
+    setToastList((toasts) => [...toasts, toast])
+  }, [])
 
-  const hideToast = useCallback(
-    (toast: ToastState) => {
-      setToastList((toasts) => toasts.filter(hideToastFilter(toast)))
-    },
-    [setToastList],
-  )
+  const hideToast = React.useCallback((toast: ToastState) => {
+    setToastList((toasts) => toasts.map(handleHideToast(toast)))
+  }, [])
 
-  const hideAllToasts = useCallback(() => {
-    setToastList([])
-  }, [setToastList])
-
-  const value: ToastContextProps = useMemo(
-    () => ({ toasts, addToast, hideToast, hideAllToasts }),
-    [toasts, addToast, hideToast, hideAllToasts],
-  )
+  const value: ToastContextProps = { toasts, addToast, hideToast }
 
   return <ToastContext.Provider value={value}>{props.children}</ToastContext.Provider>
 }
-
-export const useToasts = (): ToastContextProps => useContext(ToastContext)
