@@ -3,10 +3,12 @@
 FROM node:22-alpine AS portal-ui-deps
 
 WORKDIR /app
+# corepack (Yarn Berry) needs root; then drop to the non-root `node` user
+# before installing/building any untrusted dependencies.
+RUN corepack enable && chown node:node /app
+USER node
 
-RUN corepack enable
-
-COPY package.json yarn.lock .yarnrc.yml ./
+COPY --chown=node:node package.json yarn.lock .yarnrc.yml ./
 
 RUN yarn workspaces focus --all --production
 
@@ -14,12 +16,13 @@ RUN yarn workspaces focus --all --production
 FROM node:22-alpine AS portal-ui-builder
 
 WORKDIR /app
+RUN corepack enable && chown node:node /app
+USER node
 
-COPY --from=portal-ui-deps /app/node_modules ./node_modules
-COPY . .
+COPY --from=portal-ui-deps --chown=node:node /app/node_modules ./node_modules
+COPY --chown=node:node . .
 
-RUN corepack enable &&\
-    yarn build
+RUN yarn build
 
 FROM scratch AS portal-ui-export
 
