@@ -13,7 +13,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { Box, Button, Flex, Label, Text, TextField, styled } from '@traefiklabs/faency'
-import axios, { AxiosError } from 'axios'
 import { useField } from 'formik'
 import React, { useCallback, useEffect, useState } from 'react'
 import { FiInfo } from 'react-icons/fi'
@@ -27,6 +26,7 @@ import AlertWithIcon from 'components/shared/AlertWithIcon'
 import { APPLICATIONS_URL } from 'hooks/query/use-applications'
 import useInvalidateQueries from 'hooks/query/use-invalidate-queries'
 import useToasts from 'hooks/use-toasts'
+import { HttpError, post } from 'utils/http'
 
 const CodeField = styled(TextField, {
   length: undefined,
@@ -126,8 +126,8 @@ const APIKeyCreationFlow = ({ appId, onCancel, onComplete }: APIKeyCreationFlowP
       setIsLoading(true)
       try {
         const reqBody: API.APIKeyCreateReq = { title: values.title }
-        const res = await axios.post<API.APIKeyCreateRes>(`./api/applications/${appId}/api-keys`, reqBody)
-        setAPIKeyValue(res.data.token)
+        const res = await post<API.APIKeyCreateRes>(`./api/applications/${appId}/api-keys`, reqBody)
+        setAPIKeyValue(res.token)
         invalidateQueries({ queryKey: [APPLICATIONS_URL] })
         addToast({
           severity: 'success',
@@ -135,7 +135,7 @@ const APIKeyCreationFlow = ({ appId, onCancel, onComplete }: APIKeyCreationFlowP
         })
       } catch (err) {
         console.error(err)
-        if ((err as AxiosError)?.code === 'ERR_BAD_REQUEST') {
+        if (err instanceof HttpError && err.isClientError) {
           setHasError(true)
         } else {
           onCancel()

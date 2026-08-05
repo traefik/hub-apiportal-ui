@@ -13,9 +13,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { useSuspenseQuery } from '@tanstack/react-query'
-import axios, { AxiosError } from 'axios'
 import qs from 'query-string'
 import { useMemo } from 'react'
+
+import { get, HttpError } from 'utils/http'
 
 export default function useQuery<T>(
   fetchUrl: string,
@@ -34,17 +35,9 @@ export default function useQuery<T>(
     return `${fetchUrl}?${qs.stringify(extraParams)}`
   }, [extraParams, fetchUrl])
 
-  return useSuspenseQuery<T, AxiosError>({
+  return useSuspenseQuery<T, HttpError>({
     queryKey,
-    queryFn: () =>
-      externalQueryFn
-        ? externalQueryFn(url)
-        : axios
-            .get(url)
-            .catch((err) => {
-              throw err
-            })
-            .then(({ data }) => data),
+    queryFn: () => (externalQueryFn ? externalQueryFn(url) : get<T>(url)),
     refetchInterval: 10 * 1000,
   })
 }

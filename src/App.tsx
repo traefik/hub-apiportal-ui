@@ -14,7 +14,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { FaencyProvider, darkTheme, globalCss, lightTheme } from '@traefiklabs/faency'
-import axios from 'axios'
 import React, { useEffect } from 'react'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { BrowserRouter } from 'react-router-dom'
@@ -31,22 +30,6 @@ import 'components/styles/theme.css'
 
 const LIGHT_THEME = lightTheme('neon')
 const DARK_THEME = darkTheme('neon')
-
-/* axios global setup to handle 401 error status
- ** reload page when user's session end to initiate the auth flow
- */
-axios.interceptors.response.use(
-  (response) => {
-    return response
-  },
-  (error) => {
-    if (error.response.status === 401) {
-      location.reload()
-      return error
-    }
-    return Promise.reject(error)
-  },
-)
 
 const bodyGlobalStyle = globalCss({
   body: {

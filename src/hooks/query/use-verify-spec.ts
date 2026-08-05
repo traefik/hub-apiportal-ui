@@ -12,25 +12,23 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import axios, { AxiosError } from 'axios'
-
 import useQuery from 'hooks/query/use-query'
+import { get, HttpError } from 'utils/http'
 
 export default function useVerifySpec(specUrl: string) {
   const { data } = useQuery<{
-    error: AxiosError | null
+    error: HttpError | null
     hasSpec: boolean
     hasPaths: boolean
   }>(specUrl, undefined, () =>
-    axios
-      .get(specUrl)
-      .then((res) => ({
+    get<{ paths?: Record<string, unknown> }>(specUrl)
+      .then((spec) => ({
         error: null,
         hasSpec: true,
-        hasPaths: Object.keys(res?.data?.paths || {}).length > 0,
+        hasPaths: Object.keys(spec?.paths || {}).length > 0,
       }))
-      .catch((error: AxiosError | null) => {
-        if (error?.response?.status === 404) {
+      .catch((error: HttpError | null) => {
+        if (error?.status === 404) {
           return { error: null, hasSpec: false, hasPaths: false }
         }
         return { error, hasSpec: true, hasPaths: false }
