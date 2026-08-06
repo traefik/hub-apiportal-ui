@@ -54,19 +54,24 @@ const parseBody = async (response: Response): Promise<unknown> => {
  */
 let isReloading = false
 
+/* Expired auth, reload the page to trigger the sign in flow. */
+export const reloadForExpiredSession = (): void => {
+  if (isReloading) return
+  isReloading = true
+  location.reload()
+}
+
+/* axios sent this by default, some endpoints content-negotiate on it. */
+const ACCEPT_HEADER = 'application/json, text/plain, */*'
+
 const request = async <T>(url: string, init: RequestInit): Promise<T> => {
   const response = await fetch(url, init)
+  const data = await parseBody(response)
 
   if (response.status === 401) {
-    // Expired auth, reload the page to trigger the sign in flow.
-    if (!isReloading) {
-      isReloading = true
-      location.reload()
-    }
-    throw new HttpError(response.status, response.statusText, null)
+    reloadForExpiredSession()
+    throw new HttpError(response.status, response.statusText, data)
   }
-
-  const data = await parseBody(response)
 
   if (!response.ok) {
     throw new HttpError(response.status, response.statusText, data)
@@ -75,11 +80,13 @@ const request = async <T>(url: string, init: RequestInit): Promise<T> => {
   return data as T
 }
 
-export const get = <T>(url: string): Promise<T> => request<T>(url, { method: 'GET' })
+export const get = <T>(url: string): Promise<T> =>
+  request<T>(url, { method: 'GET', headers: { Accept: ACCEPT_HEADER } })
 
 export const post = <T>(url: string, body?: unknown): Promise<T> =>
   request<T>(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers:
+      body === undefined ? { Accept: ACCEPT_HEADER } : { Accept: ACCEPT_HEADER, 'Content-Type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),
   })

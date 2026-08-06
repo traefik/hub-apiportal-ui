@@ -14,6 +14,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 import { useCallback, useMemo, useState } from 'react'
 
+import { reloadForExpiredSession } from 'utils/http'
+
 type FetchData<T> = (body: any) => Promise<
   | {
       data: T | null
@@ -53,8 +55,7 @@ export default function useLazyFetch<T>(input: RequestInfo | URL, init?: Request
           const error = new Error(`${response.status} ${response.statusText}`)
           setError(error)
           if (response.status === 401) {
-            // Expired auth, reload the page to trigger the sign in flow.
-            location.reload()
+            reloadForExpiredSession()
             return
           }
           throw error

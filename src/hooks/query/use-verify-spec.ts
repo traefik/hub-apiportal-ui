@@ -27,11 +27,13 @@ export default function useVerifySpec(specUrl: string) {
         hasSpec: true,
         hasPaths: Object.keys(spec?.paths || {}).length > 0,
       }))
-      .catch((error: HttpError | null) => {
-        if (error?.status === 404) {
+      .catch((error: unknown) => {
+        // `fetch` rejects with a plain TypeError on network/CORS failures, so
+        // narrow before reading the status.
+        if (error instanceof HttpError && error.status === 404) {
           return { error: null, hasSpec: false, hasPaths: false }
         }
-        return { error, hasSpec: true, hasPaths: false }
+        return { error: error instanceof HttpError ? error : null, hasSpec: true, hasPaths: false }
       }),
   )
 

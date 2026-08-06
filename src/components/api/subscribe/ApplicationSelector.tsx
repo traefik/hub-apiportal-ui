@@ -23,6 +23,7 @@ import { getApplicationSelfSubscription } from 'components/api/subscribe/utils'
 import AdvancedSelectField from 'components/forms/AdvancedSelectField'
 import { APPLICATIONS_URL } from 'hooks/query/use-applications'
 import useToasts from 'hooks/use-toasts'
+import { get } from 'utils/http'
 import { isTheSamePlanLimit } from 'utils/resource'
 
 type ApplicationSelectorProps = {
@@ -44,14 +45,13 @@ const ApplicationSelector = ({ css, plans = [], subscriptions = [] }: Applicatio
       }
 
       try {
-        const res = await fetch(
+        const applications = await get<API.Application[]>(
           qs.stringifyUrl({
             url: APPLICATIONS_URL,
             query: queryParams,
           }),
         )
 
-        const applications: API.Application[] = await res.json()
         return {
           options: sortBy(
             applications.filter((application) => !application.isManaged),
